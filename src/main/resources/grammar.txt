@@ -1,0 +1,10 @@
+proposition: ([lparen] [proposition] [rparen]) | [binary expr] | [unary expr] | [atomic proposition]
+    binary expr: [proposition] [binary operator] [proposition]
+        binary operator: [and] | [or] | [implies] | [biconditional]
+            for (binary operator)s in text, see RepresentationTable.java
+
+    unary expr: [unary operator] [proposition]
+        unary operator: [not]
+            for (unary operator)s in text, see RepresentationTable.java
+
+    atomic proposition: [a-zA-Z0-9]*
