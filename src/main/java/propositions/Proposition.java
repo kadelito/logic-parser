@@ -1,7 +1,5 @@
 package propositions;
 
-import java.util.Set;
-
 /**
  * The interface Proposition.
  */
@@ -13,8 +11,6 @@ public interface Proposition {
      * Returns the truth value of this proposition.
      * Compound propositions will first evaluate the child proposition(s),
      * and the associated operation will be applied to the resulting truth value(s).
-     *
-     * This method should not modify self or any child propositions.
      *
      * @return the truth value
      */

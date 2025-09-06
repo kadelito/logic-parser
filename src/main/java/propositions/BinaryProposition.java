@@ -2,9 +2,6 @@ package propositions;
 
 import operators.BinaryOperator;
 
-import java.util.HashSet;
-import java.util.Set;
-
 public class BinaryProposition implements Proposition {
     private Proposition p;
     private Proposition q;

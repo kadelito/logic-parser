@@ -115,12 +115,6 @@ public class LogicInterpreter {
         return propositionStack.pop();
     }
 
-    private void inputError(int index, String message) {
-        throw new RuntimeException(
-                String.format("\n%s\n%" + (index + 1) + "s\n%s", input, "^", message)
-        );
-    }
-
     public Proposition getProposition() {
         return tree;
     }

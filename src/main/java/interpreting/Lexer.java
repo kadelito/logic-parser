@@ -25,7 +25,7 @@ class Lexer {
             char c = input.charAt(i);
 
             if (!repTable.isAllowed(c))
-                inputError(i, "Invalid character: " + c);
+                throwInputError(i, "Invalid character: " + c);
 
             // Skip whitespaces
             if (Character.isWhitespace(c)) {
@@ -50,13 +50,13 @@ class Lexer {
 
                     if (possible.isEmpty()) {
                         if (buffer.isEmpty())
-                            inputError(i, "Invalid character: '" + c + '\'');
+                            throwInputError(i, "Invalid character: '" + c + '\'');
 
                         TokenType correspondingType = repTable.getTokenType(buffer);
                         if (correspondingType != null)
                             tokens.add(new Token(correspondingType));
                         else
-                            inputError(i, "Invalid sequence: \"" + buffer + c + '\"');
+                            throwInputError(i, "Invalid sequence: \"" + buffer + c + '\"');
                         i--;
                         break;
                     }
@@ -66,7 +66,7 @@ class Lexer {
                 // Don't forget final token
                 if (i >= input.length())
                     if (possible.isEmpty())
-                        inputError(i, "Invalid sequence: \"" + buffer + '\"');
+                        throwInputError(i, "Invalid sequence: \"" + buffer + '\"');
                     else {
                         TokenType firstPossibleType = possible.iterator().next();
                         tokens.add(new Token(firstPossibleType));
@@ -94,8 +94,9 @@ class Lexer {
         tokens.add(new Token(TokenType.EOL));
     }
 
-    private void inputError(int index, String message) {
-        throw new RuntimeException(
+
+    private void throwInputError(int index, String message) throws IllegalStateException{
+        throw new IllegalStateException(
                 String.format("\n%s\n%" + (index + 1) + "s\n%s", input, "^", message)
         );
     }

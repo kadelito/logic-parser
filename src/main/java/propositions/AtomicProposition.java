@@ -1,7 +1,5 @@
 package propositions;
 
-import java.util.Set;
-
 public class AtomicProposition implements Proposition {
 
     private boolean immut;
