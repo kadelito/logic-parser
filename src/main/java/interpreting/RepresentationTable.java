@@ -20,6 +20,7 @@ public class RepresentationTable {
 
     private static RepresentationTable instance;
     private final List<TableRow> table = new ArrayList<>();
+    private final Set<Character> allowedCharacters = new HashSet<>();
 
     /*
      * reprType | definition
@@ -55,6 +56,14 @@ public class RepresentationTable {
         table.add(new TableRow(
                 TokenType.NOT, new String[]{"¬", "\\neg ", "-"},
                 null, UnaryOperator.NOT));
+
+        for (TableRow row: table) {
+            for (String repr: row.representations) {
+                for (char c: repr.toCharArray()) {
+                    allowedCharacters.add(c);
+                }
+            }
+        }
     }
 
     public TokenType getTokenType(String input) {
@@ -102,6 +111,10 @@ public class RepresentationTable {
                 return row.representations[reprType];
         }
         return null;
+    }
+
+    public boolean isAllowed(char c) {
+        return Character.isWhitespace(c) || Character.isLetterOrDigit(c) || allowedCharacters.contains(c);
     }
 
     public void displayAsDefault() {reprType = 0;}

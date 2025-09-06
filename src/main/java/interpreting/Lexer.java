@@ -24,9 +24,13 @@ class Lexer {
         while (i < input.length()) {
             char c = input.charAt(i);
 
+            if (!repTable.isAllowed(c))
+                inputError(i, "Invalid character: " + c);
+
             // Skip whitespaces
             if (Character.isWhitespace(c)) {
-                i++; continue;
+                i++;
+                continue;
             }
 
             // Handle parentheses

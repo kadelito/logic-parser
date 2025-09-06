@@ -115,6 +115,7 @@ public class LogicInterpreter {
                 Proposition unary = new UnaryProposition(p, curToken.getUnaryOperator());
                 propositionStack.add(unary);
             }
+            else throw new RuntimeException("?");
         }
         assert propositionStack.size() == 1;
         return propositionStack.pop();
