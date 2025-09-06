@@ -8,15 +8,12 @@ import propositions.UnaryProposition;
 import java.util.*;
 
 public class LogicInterpreter {
-    private String input;
-
     private final Lexer lexer;
     private Proposition tree;
     private List<AtomicProposition> atomics;
     private Map<String, AtomicProposition> atomicMap;
 
     public LogicInterpreter(String input) {
-        this.input = input;
         lexer = new Lexer(input);
         atomicMap = new HashMap<>();
     }
@@ -124,7 +121,6 @@ public class LogicInterpreter {
     }
 
     public void setInput(String input) {
-        this.input = input;
         lexer.setInput(input);
     }
 }
