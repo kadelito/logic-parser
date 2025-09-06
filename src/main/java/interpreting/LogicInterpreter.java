@@ -8,10 +8,9 @@ import propositions.UnaryProposition;
 import java.util.*;
 
 public class LogicInterpreter {
-    private static final RepresentationTable repTable = RepresentationTable.getInstance();
     private String input;
 
-    private Lexer lexer;
+    private final Lexer lexer;
     private Proposition tree;
     private List<AtomicProposition> atomics;
     private Map<String, AtomicProposition> atomicMap;
@@ -56,17 +55,15 @@ public class LogicInterpreter {
     private Queue<Token> tokensToRPN(List<Token> tokens) {
         Queue<Token> outputQueue = new LinkedList<>();
         Deque<Token> operatorStack = new ArrayDeque<>();
-        for (int i = 0; i < tokens.size(); i++) {
-            Token curToken = tokens.get(i);
+
+        for (Token curToken : tokens) {
             if (curToken.isConstant() || curToken.isIdentifier()) {
                 atomicMap.computeIfAbsent(curToken.data, str -> new AtomicProposition(curToken.data));
                 outputQueue.add(curToken);
-            }
-            else if (curToken.isParen()) {
+            } else if (curToken.isParen()) {
                 if (curToken.type == TokenType.OPEN_PAREN) {
                     operatorStack.push(curToken);
-                }
-                else { // curToken.type == TokenType.CLOSE_PAREN
+                } else { // curToken.type == TokenType.CLOSE_PAREN
                     while (!operatorStack.isEmpty() && operatorStack.peek().type != TokenType.OPEN_PAREN) {
                         outputQueue.add(operatorStack.pop());
                     }
@@ -74,19 +71,16 @@ public class LogicInterpreter {
                     operatorStack.pop();
                     // TODO: add support for function tokens?
                 }
-            }
-            else if (curToken.isBinaryOperation()) {
+            } else if (curToken.isBinaryOperation()) {
                 while (!operatorStack.isEmpty() &&
                         operatorStack.peek().type != TokenType.OPEN_PAREN) {
                     outputQueue.add(operatorStack.pop());
                 }
                 // TODO: add support for differing precedence & right associativity?
                 operatorStack.push(curToken);
-            }
-            else if (curToken.isUnaryOperation()) {
+            } else if (curToken.isUnaryOperation()) {
                 operatorStack.push(curToken);
-            }
-            else if (curToken.type == TokenType.EOL) break;
+            } else if (curToken.type == TokenType.EOL) break;
         }
         while (!operatorStack.isEmpty()) {
             assert operatorStack.peek().type != TokenType.OPEN_PAREN;
@@ -121,48 +115,18 @@ public class LogicInterpreter {
         return propositionStack.pop();
     }
 
-    public void printTruthTable() {
-        String treeRepr = tree.toString();
-        int reprLen = treeRepr.length();
-        int lineLen = 1 + reprLen;
-        List<Integer> atomicLengths = new ArrayList<>();
-
-        // Print atomics and entire proposition
-        StringBuilder topRow = new StringBuilder(" ");
-        for (AtomicProposition a: atomics) {
-            String aRepr = a.toString();
-            topRow.append(aRepr).append(" | ");
-            atomicLengths.add(aRepr.length());
-            lineLen += aRepr.length() + 3;
-        }
-        topRow.append(treeRepr);
-        System.out.println(topRow);
-
-        // Divider
-        for (int i = 0; i < reprLen; i++) {
-            System.out.print("-");
-        }
-        System.out.println();
-
-        // Truth Table
-        long numCombinations = 1L << atomics.size();
-        // Check for overflow
-        if (numCombinations < atomics.size())
-            throw new RuntimeException("Too many atomic propositions! (" + atomics.size() + ")");
-        for (long comb = numCombinations - 1; comb >= 0; comb--) {
-            for (int aIndex = 0; aIndex < atomics.size(); aIndex++)
-                atomics.get(atomics.size() - aIndex - 1).setValue((comb >> aIndex) % 2);
-            for (int i = 0; i < atomics.size(); i++) {
-                System.out.printf(" %" + atomicLengths.get(i) + "s |", atomics.get(i).evaluate() ? "T" : "F");
-            }
-            System.out.println(" " + tree.evaluate());
-        }
-    }
-
     private void inputError(int index, String message) {
         throw new RuntimeException(
                 String.format("\n%s\n%" + (index + 1) + "s\n%s", input, "^", message)
         );
+    }
+
+    public Proposition getProposition() {
+        return tree;
+    }
+
+    public List<AtomicProposition> getAtomics() {
+        return atomics;
     }
 
     public void setInput(String input) {
