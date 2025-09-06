@@ -94,17 +94,6 @@ class Lexer {
         tokens.add(new Token(TokenType.EOL));
     }
 
-    public void printTokens() {
-        for (Token token: tokens) {
-            if (token.type == TokenType.IDENTIFIER)
-                System.out.print(token.data);
-            else if (token.type != TokenType.EOL)
-                System.out.print(repTable.getRepresentation(token.type));
-//            System.out.print(" ");
-        }
-//        System.out.println(" \\\\");
-    }
-
     private void inputError(int index, String message) {
         throw new RuntimeException(
                 String.format("\n%s\n%" + (index + 1) + "s\n%s", input, "^", message)

@@ -2,6 +2,9 @@ package propositions;
 
 import operators.BinaryOperator;
 
+import java.util.HashSet;
+import java.util.Set;
+
 public class BinaryProposition implements Proposition {
     private Proposition p;
     private Proposition q;
@@ -13,10 +16,12 @@ public class BinaryProposition implements Proposition {
         this.operator = operator;
     }
 
+    @Override
     public boolean evaluate() {
         return operator.apply(p, q);
     }
 
+    @Override
     public String toString() {
         String pStr = p.toString();
         if (p instanceof BinaryProposition)
@@ -28,13 +33,4 @@ public class BinaryProposition implements Proposition {
 
         return String.format("%s %s %s", pStr, operator, qStr);
     }
-
-    public Proposition getProposition1() {
-        return p;
-    }
-
-    public Proposition getProposition2() {
-        return q;
-    }
-
 }

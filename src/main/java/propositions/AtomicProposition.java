@@ -1,8 +1,10 @@
 package propositions;
 
+import java.util.Set;
+
 public class AtomicProposition implements Proposition {
 
-    private boolean immut = false;
+    private boolean immut;
     private boolean value;
     private String repr;
 
@@ -22,6 +24,7 @@ public class AtomicProposition implements Proposition {
         this(repr, true);
     }
 
+    @Override
     public boolean evaluate() {
         return value;
     }
@@ -38,6 +41,7 @@ public class AtomicProposition implements Proposition {
         setValue(value != 0);
     }
 
+    @Override
     public String toString() {
         return repr;
     }

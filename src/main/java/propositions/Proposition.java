@@ -1,5 +1,7 @@
 package propositions;
 
+import java.util.Set;
+
 /**
  * The interface Proposition.
  */
@@ -28,14 +30,4 @@ public interface Proposition {
      * @return the complete representation
      */
     String toString();
-
-    /**
-     * Returns whether this proposition is defined circularly.
-     * Compound propositions may implement this
-     *
-     * @return whether
-     */
-    default boolean isCircular() {
-        return false;
-    }
 }
