@@ -10,12 +10,10 @@ public enum TokenType {
     BICONDITIONAL,
     NOT,
     TRUE,
-    FALSE,
-    EOL;
+    FALSE;
 
     int getCategory() {
         return switch (this) {
-            case EOL -> -1;
             case IDENTIFIER -> 0;
             case TRUE, FALSE -> 1;                  // Constants
             case OPEN_PAREN, CLOSE_PAREN -> 2;      // Parentheses

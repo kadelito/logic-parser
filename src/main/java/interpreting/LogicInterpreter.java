@@ -40,7 +40,6 @@ public class LogicInterpreter {
         atomicMap.put("F", Proposition.FALSE);
 
         Queue<Token> tokenQueue = tokensToRPN(tokens);
-
         Proposition tree = buildPropositionTree(tokenQueue);
 
         atomicMap.remove("T");
@@ -66,7 +65,7 @@ public class LogicInterpreter {
                     while (!operatorStack.isEmpty() && operatorStack.peek().type != TokenType.OPEN_PAREN) {
                         outputQueue.add(operatorStack.pop());
                     }
-                    assert Objects.requireNonNull(operatorStack.peek()).type == TokenType.OPEN_PAREN;
+                    assert !operatorStack.isEmpty() && operatorStack.peek().type == TokenType.OPEN_PAREN;
                     operatorStack.pop();
                     // TODO: add support for function tokens?
                 }
@@ -79,7 +78,7 @@ public class LogicInterpreter {
                 operatorStack.push(curToken);
             } else if (curToken.isUnaryOperation()) {
                 operatorStack.push(curToken);
-            } else if (curToken.type == TokenType.EOL) break;
+            }
         }
         while (!operatorStack.isEmpty()) {
             assert operatorStack.peek().type != TokenType.OPEN_PAREN;

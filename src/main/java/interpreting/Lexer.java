@@ -91,7 +91,6 @@ class Lexer {
             }
             i++;
         }
-        tokens.add(new Token(TokenType.EOL));
     }
 
 

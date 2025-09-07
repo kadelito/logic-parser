@@ -68,8 +68,6 @@ public class RepresentationTable {
         }
     }
 
-
-
     public void printTruthTable(LogicInterpreter interpreter) {
 
         Proposition proposition = interpreter.getProposition();
