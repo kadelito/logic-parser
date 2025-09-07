@@ -18,12 +18,9 @@ public interface Proposition {
 
     /**
      * Returns a string representation of this proposition.
-     * For compound propositions, this method is typically called on the child proposition(s),
-     * and their respective toString return values are concatenated with any other symbols
-     * associated with the compound proposition.
-     * This method should not modify self or any child propositions.
+     * If a proposition is a member, repr should be called on that
      *
      * @return the complete representation
      */
-    String toString();
+    String repr();
 }

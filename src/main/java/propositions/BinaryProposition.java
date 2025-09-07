@@ -19,12 +19,12 @@ public class BinaryProposition implements Proposition {
     }
 
     @Override
-    public String toString() {
-        String pStr = p.toString();
+    public String repr() {
+        String pStr = p.repr();
         if (p instanceof BinaryProposition)
             pStr = "(" + pStr + ")";
 
-        String qStr = q.toString();
+        String qStr = q.repr();
         if (q instanceof BinaryProposition)
             qStr = "(" + qStr + ")";
 

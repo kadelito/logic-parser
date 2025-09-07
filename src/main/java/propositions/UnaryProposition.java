@@ -17,7 +17,7 @@ public class UnaryProposition implements Proposition {
     }
 
     @Override
-    public String toString() {
-        return operator.toString() + p.toString();
+    public String repr() {
+        return operator.toString() + p.repr();
     }
 }

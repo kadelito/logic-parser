@@ -40,7 +40,7 @@ public class AtomicProposition implements Proposition {
     }
 
     @Override
-    public String toString() {
+    public String repr() {
         return repr;
     }
 }

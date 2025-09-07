@@ -29,9 +29,11 @@ public class LogicInterpreter {
     }
 
     /**
-     * Parses the given list of tokens
+     * Parses the given list of tokens into a propositional tree.
      *
      * @param tokens the tokens
+     *
+     * @return the head node of the tree
      */
     public Proposition parse(List<Token> tokens) {
         atomicMap.put("T", Proposition.TRUE);
