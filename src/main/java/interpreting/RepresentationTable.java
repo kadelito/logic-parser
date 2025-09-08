@@ -12,14 +12,6 @@ import java.util.Set;
 
 public class RepresentationTable {
 
-    record TableRow(
-            TokenType tokenType,
-            String[] representations,
-            // exactly one of binaryOperator and unaryOperator will be null
-             BinaryOperator binaryOperator,
-            UnaryOperator unaryOperator
-    ) {}
-
     private static RepresentationTable instance;
     private final List<TableRow> table = new ArrayList<>();
     private final Set<Character> allowedCharacters = new HashSet<>();
@@ -31,36 +23,44 @@ public class RepresentationTable {
      *        0 | Default
      *        1 | LaTeX
      *        2 | Typeable
+     *        3 | Words
      */
     private int reprType = -1;
 
     private RepresentationTable() {
 
         table.add(new TableRow(
-                TokenType.OPEN_PAREN, new String[]{"(","(","("},
+                TokenType.OPEN_PAREN, new String[]{"(","(","(","("},
                 null, null));
         table.add(new TableRow(
-                TokenType.CLOSE_PAREN, new String[]{")",")",")"},
+                TokenType.CLOSE_PAREN, new String[]{")",")",")",")"},
                 null, null));
 
         table.add(new TableRow(
-                TokenType.AND, new String[]{"∧", "\\land ", "^"},
+                TokenType.AND, new String[]{"∧", "\\land", "^", "AND"},
                 BinaryOperator.AND, null));
         table.add(new TableRow(
-                TokenType.OR, new String[]{"∨", "\\lor ", "v"},
+                TokenType.OR, new String[]{"∨", "\\lor", "v", "OR"},
                 BinaryOperator.OR, null));
         table.add(new TableRow(
-                TokenType.IMPLY, new String[]{"→", "\\rightarrow ", "->", "⇒"},
+                TokenType.IMPLY, new String[]{"→", "\\rightarrow", "->", "IMPLIES", "⇒"},
                 BinaryOperator.IMPLY, null));
         table.add(new TableRow(
-                TokenType.BICONDITIONAL,new String[]{"↔", "\\leftrightarrow ", "<->", "⇔"},
+                TokenType.BICONDITIONAL,new String[]{"↔", "\\leftrightarrow", "<->", "EQUALS", "⇔"}, //TODO better word for biconditional
                 BinaryOperator.BICONDITIONAL, null));
         table.add(new TableRow(
-                TokenType.NOT, new String[]{"¬", "\\neg ", "-"},
+                TokenType.NOT, new String[]{"¬", "\\neg ", "-", "NOT"},
                 null, UnaryOperator.NOT));
 
+        table.add(new TableRow(
+                TokenType.TRUE, new String[]{"T", "T", "T", "TRUE", "1"},
+                null, null));
+        table.add(new TableRow(
+                TokenType.TRUE, new String[]{"F", "F", "F", "FALSE", "0"},
+                null, null));
+
         for (TableRow row: table) {
-            for (String repr: row.representations) {
+            for (String repr: row.representations()) {
                 for (char c: repr.toCharArray()) {
                     allowedCharacters.add(c);
                 }
@@ -98,8 +98,10 @@ public class RepresentationTable {
         // Truth Table
         long numCombinations = 1L << atomics.size();
         // Check for overflow
-        if (numCombinations < atomics.size())
-            throw new RuntimeException("Too many atomic propositions! (" + atomics.size() + ")");
+        if (numCombinations < atomics.size()) {
+            System.out.println("Too many atomic propositions! (" + atomics.size() + ")");
+            return;
+        }
         for (long comb = numCombinations - 1; comb >= 0; comb--) {
             for (int aIndex = 0; aIndex < atomics.size(); aIndex++)
                 atomics.get(atomics.size() - aIndex - 1).setValue((comb >> aIndex) % 2);
@@ -118,9 +120,9 @@ public class RepresentationTable {
 
     public TokenType getTokenType(String input) {
         for (TableRow row: table) {
-            for (String repr: row.representations) {
+            for (String repr: row.representations()) {
                 if (repr.equals(input))
-                    return row.tokenType;
+                    return row.tokenType();
             }
         }
         return null;
@@ -129,9 +131,9 @@ public class RepresentationTable {
     public Set<TokenType> getPossibleTokenTypes(String input) {
         Set<TokenType> possible = new HashSet<>();
         for (TableRow row: table) {
-            for (String repr: row.representations) {
+            for (String repr: row.representations()) {
                 if (input.length() <= repr.length() && repr.startsWith(input)) {
-                    possible.add(row.tokenType);
+                    possible.add(row.tokenType());
                     break;
                 }
             }
@@ -141,27 +143,34 @@ public class RepresentationTable {
 
     public String getRepresentation(BinaryOperator binOp) {
         for (TableRow row: table) {
-            if (row.binaryOperator == binOp)
-                return row.representations[reprType];
+            if (row.binaryOperator() == binOp)
+                return row.representations()[reprType];
         }
         return null;
     }
 
     public String getRepresentation(UnaryOperator unOp) {
         for (TableRow row: table) {
-            if (row.unaryOperator == unOp)
-                return row.representations[reprType];
+            if (row.unaryOperator() == unOp)
+                return row.representations()[reprType] + extraSpace();
         }
         return null;
     }
 
     public boolean isAllowed(char c) {
-        return Character.isWhitespace(c) || Character.isLetterOrDigit(c) || allowedCharacters.contains(c);
+        return Character.isWhitespace(c) || validIdentifierChar(c) || allowedCharacters.contains(c);
     }
+
+    public boolean validIdentifierChar(char c) {
+        return c == '_' || Character.isLetterOrDigit(c);
+    }
+
+    private String extraSpace() {return reprType == 1 || reprType == 3 ? " " : "";}
 
     public void displayAsDefault() {reprType = 0;}
     public void displayAsLatex() {reprType = 1;}
     public void displayAsTypeable() {reprType = 2;}
+    public void displayAsWords() {reprType = 3;}
 
     public static RepresentationTable getInstance() {
         if (instance == null)

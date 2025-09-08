@@ -1,11 +1,8 @@
 package propositions;
 
-/**
- * The interface Proposition.
- */
-public interface Proposition {
-    AtomicProposition TRUE = new AtomicProposition("T", true, true);
-    AtomicProposition FALSE = new AtomicProposition("F", false, true);
+public abstract class Proposition {
+    public static final AtomicProposition TRUE = new AtomicProposition("T", true, true);
+    public static final AtomicProposition FALSE = new AtomicProposition("F", false, true);
 
     /**
      * Returns the truth value of this proposition.
@@ -14,7 +11,7 @@ public interface Proposition {
      *
      * @return the truth value
      */
-    boolean evaluate();
+    public abstract boolean evaluate();
 
     /**
      * Returns a string representation of this proposition.
@@ -22,5 +19,9 @@ public interface Proposition {
      *
      * @return the complete representation
      */
-    String repr();
+    public abstract String repr();
+
+    public String toString() {
+        return repr();
+    }
 }

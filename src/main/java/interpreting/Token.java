@@ -34,6 +34,18 @@ public class Token {
         };
     }
 
+    public int numOperands() {
+        return switch (type.getCategory()) {
+            case 3 -> 2;
+            case 4 -> 1;
+            default -> 0;
+        };
+    }
+
+    public boolean isProposition() {
+        return isIdentifier() || isConstant();
+    }
+
     public boolean isIdentifier() {
         return type.getCategory() == 0;
     }
@@ -55,6 +67,6 @@ public class Token {
     }
 
     public String toString() {
-        return String.format("%s%s", type, type == TokenType.IDENTIFIER ? (": \"" + data + '\"') : "");
+        return String.format("%s%s", type, type == TokenType.IDENTIFIER ? (": '" + data + '\'') : "");
     }
 }

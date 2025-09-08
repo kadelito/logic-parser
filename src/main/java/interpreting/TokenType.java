@@ -4,13 +4,23 @@ public enum TokenType {
     OPEN_PAREN,
     CLOSE_PAREN,
     IDENTIFIER,
-    AND,
-    OR,
-    IMPLY,
-    BICONDITIONAL,
-    NOT,
+    AND(3),
+    OR(2),
+    IMPLY(1),
+    BICONDITIONAL(0),
+    NOT(4),
     TRUE,
     FALSE;
+
+    public final Integer precedence;
+
+    TokenType(Integer precedence) {
+        this.precedence = precedence;
+    }
+
+    TokenType() {
+        this(null);
+    }
 
     int getCategory() {
         return switch (this) {

@@ -9,14 +9,14 @@ class Lexer {
     private static final RepresentationTable repTable = RepresentationTable.getInstance();
 
     private String input;
-    private List<Token> tokens;
-
+    private InterpretingResult<List<Token>> tokens;
+                                                                       
     public Lexer(String input) {
         this.input = input;
     }
 
     public void tokenize() {
-        tokens = new ArrayList<>();
+        tokens = new InterpretingResult<>(new ArrayList<>(), null);
 
         // Iterate through "starting" characters of each substring
         // that corresponds to a single token
@@ -24,8 +24,10 @@ class Lexer {
         while (i < input.length()) {
             char c = input.charAt(i);
 
-            if (!repTable.isAllowed(c))
-                throwInputError(i, "Invalid character: " + c);
+            if (!repTable.isAllowed(c)) {
+                setInputError(i, "Invalid character: " + c);
+                return;
+            }
 
             // Skip whitespaces
             if (Character.isWhitespace(c)) {
@@ -35,12 +37,30 @@ class Lexer {
 
             // Handle parentheses
             else if (c == '(')
-                tokens.add(new Token(TokenType.OPEN_PAREN));
+                tokens.value().add(new Token(TokenType.OPEN_PAREN));
             else if (c == ')')
-                tokens.add(new Token(TokenType.CLOSE_PAREN));
+                tokens.value().add(new Token(TokenType.CLOSE_PAREN));
 
-            // Non-alphanumeric characters mark miscellaneous tokens (or beginnings of them)
-            else if (!Character.isLetterOrDigit(c)) {
+            // Add identifier
+            else if (repTable.validIdentifierChar(c)) {
+                StringBuilder ident = new StringBuilder();
+                while (i < input.length() && repTable.validIdentifierChar(c = input.charAt(i))) {
+                    ident.append(c);
+                    i++;
+                }
+                i--;
+                String name = ident.toString();
+
+                // If already a token, add that instead of an identifier
+                // For example 'T' would become a TRUE token instead of an identifier
+                TokenType otherTokenType = repTable.getTokenType(name);
+                if (otherTokenType != null)
+                    tokens.value().add(new Token(otherTokenType));
+                else
+                    tokens.value().add(new Token(TokenType.IDENTIFIER, name));
+            }
+            // Invalid identifier characters mark miscellaneous tokens (or beginnings of them)
+            else  { // Character.isLetterOrDigit(c) is false
                 String buffer = "";
                 Set<TokenType> possible = new HashSet<>();
                 while (i < input.length()) {
@@ -49,14 +69,18 @@ class Lexer {
                     possible = repTable.getPossibleTokenTypes(buffer + c);
 
                     if (possible.isEmpty()) {
-                        if (buffer.isEmpty())
-                            throwInputError(i, "Invalid character: '" + c + '\'');
+                        if (buffer.isEmpty()) {
+                            setInputError(i, "Invalid character: '" + c + '\'');
+                            return;
+                        }
 
                         TokenType correspondingType = repTable.getTokenType(buffer);
                         if (correspondingType != null)
-                            tokens.add(new Token(correspondingType));
-                        else
-                            throwInputError(i, "Invalid sequence: \"" + buffer + c + '\"');
+                            tokens.value().add(new Token(correspondingType));
+                        else {
+                            setInputError(i, "Invalid sequence: \"" + buffer + c + '\"');
+                            return;
+                        }
                         i--;
                         break;
                     }
@@ -64,43 +88,32 @@ class Lexer {
                     i++;
                 }
                 // Don't forget final token
-                if (i >= input.length())
-                    if (possible.isEmpty())
-                        throwInputError(i, "Invalid sequence: \"" + buffer + '\"');
-                    else {
-                        TokenType firstPossibleType = possible.iterator().next();
-                        tokens.add(new Token(firstPossibleType));
+                if (i >= input.length()) {
+                    if (possible.isEmpty()) {
+                        setInputError(i, "Invalid sequence: \"" + buffer + '\"');
+                        return;
                     }
-            }
-
-            // Add identifiers for contiguous alphanumeric substrings
-            else  { // Character.isLetterOrDigit(c) is true
-                StringBuilder ident = new StringBuilder();
-                while (i < input.length() && Character.isLetterOrDigit(c = input.charAt(i))) {
-                    ident.append(c);
-                    i++;
+                    else {
+                        TokenType correspondingType = repTable.getTokenType(buffer);
+                        if (correspondingType != null)
+                            tokens.value().add(new Token(correspondingType));
+                        else {
+                            setInputError(i, "Invalid sequence: \"" + buffer + c + '\"');
+                            return;
+                        }
+                    }
                 }
-                String name = ident.toString();
-                if (name.equals("T") || name.equals("1"))
-                    tokens.add(new Token(TokenType.TRUE, "T"));
-                else if (name.equals("F")|| name.equals("0"))
-                    tokens.add(new Token(TokenType.FALSE, "F"));
-                else
-                    tokens.add(new Token(TokenType.IDENTIFIER, name));
-                i--;
             }
             i++;
         }
     }
 
 
-    private void throwInputError(int index, String message) throws IllegalStateException{
-        throw new IllegalStateException(
-                String.format("\n%s\n%" + (index + 1) + "s\n%s", input, "^", message)
-        );
+    private void setInputError(int index, String message) {
+        tokens = new InterpretingResult<>(null, String.format("\n%s\n%" + (index + 1) + "s\n%s", input, "^", message));
     }
 
-    public List<Token> getTokens() {
+    public InterpretingResult<List<Token>> getTokens() {
         return tokens;
     }
 

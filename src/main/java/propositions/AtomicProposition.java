@@ -1,6 +1,6 @@
 package propositions;
 
-public class AtomicProposition implements Proposition {
+public class AtomicProposition extends Proposition {
 
     private boolean immut;
     private boolean value;

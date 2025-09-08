@@ -2,7 +2,7 @@ package propositions;
 
 import operators.UnaryOperator;
 
-public class UnaryProposition implements Proposition {
+public class UnaryProposition extends Proposition {
     private Proposition p;
     private UnaryOperator operator;
 
@@ -18,6 +18,11 @@ public class UnaryProposition implements Proposition {
 
     @Override
     public String repr() {
-        return operator.toString() + p.repr();
+        String pStr = p.repr();
+        if (p instanceof AtomicProposition)
+            pStr = '\'' + pStr + '\'';
+        else
+            pStr = '(' + pStr + ')';
+        return operator.toString() + pStr;
     }
 }

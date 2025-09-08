@@ -2,7 +2,7 @@ package propositions;
 
 import operators.BinaryOperator;
 
-public class BinaryProposition implements Proposition {
+public class BinaryProposition extends Proposition {
     private Proposition p;
     private Proposition q;
     private BinaryOperator operator;
@@ -21,12 +21,16 @@ public class BinaryProposition implements Proposition {
     @Override
     public String repr() {
         String pStr = p.repr();
-        if (p instanceof BinaryProposition)
-            pStr = "(" + pStr + ")";
+        if (p instanceof AtomicProposition)
+            pStr = '\'' + pStr + '\'';
+        else
+            pStr = '(' + pStr + ')';
 
         String qStr = q.repr();
-        if (q instanceof BinaryProposition)
-            qStr = "(" + qStr + ")";
+        if (q instanceof AtomicProposition)
+            qStr = '\'' + qStr + '\'';
+        else
+            qStr = '(' + qStr + ')';
 
         return String.format("%s %s %s", pStr, operator, qStr);
     }
