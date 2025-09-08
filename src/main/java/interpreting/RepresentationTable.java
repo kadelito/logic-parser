@@ -30,10 +30,10 @@ public class RepresentationTable {
     private RepresentationTable() {
 
         table.add(new TableRow(
-                TokenType.OPEN_PAREN, new String[]{"(","(","(","("},
+                TokenType.OPEN_PAREN, new String[]{"("},
                 null, null));
         table.add(new TableRow(
-                TokenType.CLOSE_PAREN, new String[]{")",")",")",")"},
+                TokenType.CLOSE_PAREN, new String[]{")"},
                 null, null));
 
         table.add(new TableRow(
@@ -53,10 +53,10 @@ public class RepresentationTable {
                 null, UnaryOperator.NOT));
 
         table.add(new TableRow(
-                TokenType.TRUE, new String[]{"T", "T", "T", "TRUE", "1"},
+                TokenType.TRUE, new String[]{"T", "TRUE", "1"},
                 null, null));
         table.add(new TableRow(
-                TokenType.TRUE, new String[]{"F", "F", "F", "FALSE", "0"},
+                TokenType.TRUE, new String[]{"F", "FALSE", "0"},
                 null, null));
 
         for (TableRow row: table) {
@@ -139,6 +139,14 @@ public class RepresentationTable {
             }
         }
         return possible;
+    }
+
+    public String getRepresentation(TokenType type) {
+        for (TableRow row: table) {
+            if (row.tokenType() == type)
+                return row.representations()[reprType];
+        }
+        return null;
     }
 
     public String getRepresentation(BinaryOperator binOp) {

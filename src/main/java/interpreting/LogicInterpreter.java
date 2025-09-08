@@ -15,7 +15,6 @@ public class LogicInterpreter {
 
     public LogicInterpreter(String input) {
         lexer = new Lexer(input);
-        atomicMap = new HashMap<>();
     }
 
     public LogicInterpreter() {
@@ -125,6 +124,7 @@ public class LogicInterpreter {
 
     // Generate propositional treeOutput from RPN queue of tokens
     private InterpretingResult<Proposition> buildPropositionTree(Queue<Token> tokenQueue) {
+        atomicMap = new HashMap<>();
         Stack<Proposition> propositionStack = new Stack<>();
 
         for (Token curToken: tokenQueue) {

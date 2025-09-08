@@ -1,5 +1,8 @@
 package propositions;
 
+import interpreting.RepresentationTable;
+import interpreting.TokenType;
+
 public class AtomicProposition extends Proposition {
 
     private boolean immut;
@@ -7,8 +10,6 @@ public class AtomicProposition extends Proposition {
     private String repr;
 
     AtomicProposition(String repr, boolean value, boolean immut) {
-        if (repr.isBlank())
-            throw new RuntimeException("Atomic proposition cannot be blank.");
         this.repr = repr;
         this.value = value;
         this.immut = immut;
