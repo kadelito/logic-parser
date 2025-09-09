@@ -141,14 +141,6 @@ public class RepresentationTable {
         return possible;
     }
 
-    public String getRepresentation(TokenType type) {
-        for (TableRow row: table) {
-            if (row.tokenType() == type)
-                return row.representations()[reprType];
-        }
-        return null;
-    }
-
     public String getRepresentation(BinaryOperator binOp) {
         for (TableRow row: table) {
             if (row.binaryOperator() == binOp)

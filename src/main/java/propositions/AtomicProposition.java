@@ -1,8 +1,5 @@
 package propositions;
 
-import interpreting.RepresentationTable;
-import interpreting.TokenType;
-
 public class AtomicProposition extends Proposition {
 
     private boolean immut;

@@ -108,7 +108,6 @@ class Lexer {
         }
     }
 
-
     private void setInputError(int index, String message) {
         tokens = new InterpretingResult<>(null, String.format("\n%s\n%" + (index + 1) + "s\n%s", input, "^", message));
     }
