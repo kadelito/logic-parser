@@ -1,4 +1,4 @@
-package interpreting;
+package interpreting.tokenization;
 
 public enum TokenType {
     OPEN_PAREN,
@@ -10,7 +10,8 @@ public enum TokenType {
     BICONDITIONAL(0),
     NOT(4),
     TRUE,
-    FALSE;
+    FALSE,
+    EOF;
 
     public final Integer precedence;
 
@@ -29,6 +30,7 @@ public enum TokenType {
             case OPEN_PAREN, CLOSE_PAREN -> 2;      // Parentheses
             case AND, OR, IMPLY, BICONDITIONAL -> 3;// Binary operators
             case NOT -> 4;                          // Unary operator
+            default -> -1;
         };
     }
 }

@@ -1,6 +1,6 @@
 package operators;
 
-import interpreting.RepresentationTable;
+import interpreting.common.RepresentationTable;
 import propositions.Proposition;
 
 public enum UnaryOperator {

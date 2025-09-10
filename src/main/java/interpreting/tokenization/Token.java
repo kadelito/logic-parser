@@ -1,4 +1,4 @@
-package interpreting;
+package interpreting.tokenization;
 
 import operators.BinaryOperator;
 import operators.UnaryOperator;
@@ -28,10 +28,7 @@ public class Token {
     }
 
     public UnaryOperator getUnaryOperator() {
-        return switch (type) {
-            case TokenType.NOT -> UnaryOperator.NOT;
-            default -> null;
-        };
+        return type == TokenType.NOT ? UnaryOperator.NOT : null;
     }
 
     public int numOperands() {

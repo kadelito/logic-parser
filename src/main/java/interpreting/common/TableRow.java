@@ -1,5 +1,6 @@
-package interpreting;
+package interpreting.common;
 
+import interpreting.tokenization.TokenType;
 import operators.BinaryOperator;
 import operators.UnaryOperator;
 

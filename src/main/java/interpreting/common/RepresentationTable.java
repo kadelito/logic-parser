@@ -1,5 +1,7 @@
-package interpreting;
+package interpreting.common;
 
+import interpreting.parsing.LogicInterpreter;
+import interpreting.tokenization.TokenType;
 import operators.BinaryOperator;
 import operators.UnaryOperator;
 import propositions.AtomicProposition;
@@ -46,7 +48,7 @@ public class RepresentationTable {
                 TokenType.IMPLY, new String[]{"→", "\\rightarrow", "->", "IMPLIES", "⇒"},
                 BinaryOperator.IMPLY, null));
         table.add(new TableRow(
-                TokenType.BICONDITIONAL,new String[]{"↔", "\\leftrightarrow", "<->", "EQUALS", "⇔"}, //TODO better word for biconditional
+                TokenType.BICONDITIONAL,new String[]{"↔", "\\leftrightarrow", "<->", "EQUALS", "⇔", "\\equiv"}, //TODO better word for biconditional
                 BinaryOperator.BICONDITIONAL, null));
         table.add(new TableRow(
                 TokenType.NOT, new String[]{"¬", "\\neg ", "-", "NOT"},
