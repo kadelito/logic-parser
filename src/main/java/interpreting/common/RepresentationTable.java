@@ -72,13 +72,13 @@ public class RepresentationTable {
 
     public void printTruthTable(LogicInterpreter interpreter) {
 
-        Proposition proposition = interpreter.getProposition();
-        List<AtomicProposition> atomics = interpreter.getAtomics();
+        Proposition proposition = interpreter.getLastProposition();
+        List<AtomicProposition> atomics = new ArrayList<>(interpreter.getAtomics());
 
         String treeRepr = proposition.repr();
         int reprLen = treeRepr.length();
         int lineLen = 2 + reprLen;
-        List<Integer> atomicLengths = new ArrayList<>();
+        List<Integer> atomicLengths = new ArrayList<>(atomics.size());
 
         // Print atomics and entire proposition
         StringBuilder topRow = new StringBuilder(" ");

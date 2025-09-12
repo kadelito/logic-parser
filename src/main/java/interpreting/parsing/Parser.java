@@ -11,12 +11,10 @@ public class Parser {
 
     private Iterable<InterpretingResult<Token>> tokenStreamRPN;
 
-    private Collection<AtomicProposition> atomics;
+    private Set<AtomicProposition> atomics;
 
     public Parser(Lexer lexer) {
         tokenStreamRPN = new TokenPreParser(lexer);
-//        tokenStreamRPN = lexer;
-        atomics = Collections.emptyList();
     }
 
     // Generate propositional treeOutput from RPN queue of tokens
@@ -59,11 +57,11 @@ public class Parser {
         if (propositionStack.size() != 1)
             return new InterpretingResult<>(null, "More than 1 proposition found");
 
-        atomics = atomicMap.values();
+        atomics = new HashSet<>(atomicMap.values());
         return new InterpretingResult<>(propositionStack.pop(), null);
     }
 
-    public Collection<AtomicProposition> getAtomics() {
+    public Set<AtomicProposition> getAtomics() {
         return atomics;
     }
 }
