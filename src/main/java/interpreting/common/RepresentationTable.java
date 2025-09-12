@@ -1,6 +1,6 @@
 package interpreting.common;
 
-import interpreting.parsing.LogicInterpreter;
+import interpreting.parsing.PropositionProcessor;
 import interpreting.tokenization.TokenType;
 import operators.BinaryOperator;
 import operators.UnaryOperator;
@@ -70,7 +70,7 @@ public class RepresentationTable {
         }
     }
 
-    public void printTruthTable(LogicInterpreter interpreter) {
+    public void printTruthTable(PropositionProcessor interpreter) {
 
         Proposition proposition = interpreter.getLastProposition();
         List<AtomicProposition> atomics = new ArrayList<>(interpreter.getAtomics());

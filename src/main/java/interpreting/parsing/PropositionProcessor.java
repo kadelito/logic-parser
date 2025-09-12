@@ -7,14 +7,14 @@ import propositions.Proposition;
 
 import java.util.*;
 
-public class LogicInterpreter {
+public class PropositionProcessor {
     private Lexer lexer;
     private Parser parser;
     private InterpretingResult<Proposition> prevTreeOutput;
     private List<Proposition> propositions;
     private Set<AtomicProposition> atomics;
 
-    public LogicInterpreter(String input) {
+    public PropositionProcessor(String input) {
         atomics = new HashSet<>();
         propositions = new ArrayList<>();
 
@@ -22,7 +22,7 @@ public class LogicInterpreter {
         parser = new Parser(lexer);
     }
 
-    public LogicInterpreter() {
+    public PropositionProcessor() {
         this("");
     }
 
@@ -32,6 +32,11 @@ public class LogicInterpreter {
             propositions.add(prevTreeOutput.value());
             atomics.addAll(parser.getAtomics());
         }
+    }
+
+    public void generateProposition(String newStr) {
+        setInput(newStr);
+        generateProposition();
     }
 
     public Proposition getLastProposition() {
