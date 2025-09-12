@@ -6,16 +6,17 @@ public abstract class Proposition {
 
     /**
      * Returns the truth value of this proposition.
-     * Compound propositions will first evaluate the child proposition(s),
-     * and the associated operation will be applied to the resulting truth value(s).
+     * <p>
+     * Implementations should use the value of evaluate when called on child propositions.
      *
-     * @return the truth value
+     * @return the truth value of this proposition
      */
     public abstract boolean evaluate();
 
     /**
      * Returns a string representation of this proposition.
-     * If a proposition is a member, repr should be called on that
+     * <p>
+     * Implementations should include the value of repr when called on child propositions.
      *
      * @return the complete representation
      */
