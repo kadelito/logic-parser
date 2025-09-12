@@ -19,9 +19,7 @@ public class UnaryProposition extends Proposition {
     @Override
     public String repr() {
         String pStr = p.repr();
-        if (p instanceof AtomicProposition)
-            pStr = '\'' + pStr + '\'';
-        else
+        if (!(p instanceof AtomicProposition))
             pStr = '(' + pStr + ')';
         return operator.toString() + pStr;
     }

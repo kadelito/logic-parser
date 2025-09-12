@@ -21,15 +21,11 @@ public class BinaryProposition extends Proposition {
     @Override
     public String repr() {
         String pStr = p.repr();
-        if (p instanceof AtomicProposition)
-            pStr = '\'' + pStr + '\'';
-        else
+        if (!(p instanceof AtomicProposition))
             pStr = '(' + pStr + ')';
 
         String qStr = q.repr();
-        if (q instanceof AtomicProposition)
-            qStr = '\'' + qStr + '\'';
-        else
+        if (!(q instanceof AtomicProposition))
             qStr = '(' + qStr + ')';
 
         return String.format("%s %s %s", pStr, operator, qStr);

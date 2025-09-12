@@ -39,6 +39,6 @@ public class AtomicProposition extends Proposition {
 
     @Override
     public String repr() {
-        return repr;
+        return '\'' + repr + '\'';
     }
 }
