@@ -169,9 +169,24 @@ public class RepresentationTable {
 
     private String extraSpace() {return reprType == 1 || reprType == 3 ? " " : "";}
 
+    /**
+     * Display propositional operations as default symbols, ex: and operator -> "∧"
+     */
     public void displayAsDefault() {reprType = 0;}
-    public void displayAsLatex() {reprType = 1;}
+
+    /**
+     * Display propositional operations as LaTeX commands, ex: and operator -> "\land"
+     */
+    public void displayAsLaTeX() {reprType = 1;}
+
+    /**
+     * Display propositional operations as typeable characters, ex: and operator -> "^"
+     */
     public void displayAsTypeable() {reprType = 2;}
+
+    /**
+     * Display propositional operations as English words, ex: and operator -> "AND"
+     */
     public void displayAsWords() {reprType = 3;}
 
     public static RepresentationTable getInstance() {
