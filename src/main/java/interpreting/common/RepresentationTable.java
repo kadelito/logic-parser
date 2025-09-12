@@ -39,10 +39,10 @@ public class RepresentationTable {
                 null, null));
 
         table.add(new TableRow(
-                TokenType.AND, new String[]{"∧", "\\land", "^", "AND"},
+                TokenType.AND, new String[]{"∧", "\\land", "^", "AND", "&", "&&", "*"},
                 BinaryOperator.AND, null));
         table.add(new TableRow(
-                TokenType.OR, new String[]{"∨", "\\lor", "v", "OR"},
+                TokenType.OR, new String[]{"∨", "\\lor", "v", "OR", "|", "||", "+"},
                 BinaryOperator.OR, null));
         table.add(new TableRow(
                 TokenType.IMPLY, new String[]{"→", "\\rightarrow", "->", "IMPLIES", "⇒"},
@@ -51,7 +51,7 @@ public class RepresentationTable {
                 TokenType.BICONDITIONAL,new String[]{"↔", "\\leftrightarrow", "<->", "EQUALS", "⇔", "\\equiv"}, //TODO better word for biconditional
                 BinaryOperator.BICONDITIONAL, null));
         table.add(new TableRow(
-                TokenType.NOT, new String[]{"¬", "\\neg ", "-", "NOT"},
+                TokenType.NOT, new String[]{"¬", "\\neg ", "-", "NOT", "!", "~"},
                 null, UnaryOperator.NOT));
 
         table.add(new TableRow(
