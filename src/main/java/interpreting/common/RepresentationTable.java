@@ -55,10 +55,10 @@ public class RepresentationTable {
                 null, UnaryOperator.NOT));
 
         table.add(new TableRow(
-                TokenType.TRUE, new String[]{"T", "TRUE", "1"},
+                TokenType.TRUE, new String[]{"T", "T", "T", "TRUE", "1"},
                 null, null));
         table.add(new TableRow(
-                TokenType.TRUE, new String[]{"F", "FALSE", "0"},
+                TokenType.FALSE, new String[]{"F", "F", "F", "FALSE", "0"},
                 null, null));
 
         for (TableRow row: table) {
