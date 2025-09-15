@@ -4,12 +4,9 @@ import interpreting.parsing.PropositionProcessor;
 import propositions.AtomicProposition;
 import propositions.Proposition;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
-public class LogicContext {
+public class LogicContext implements Collection<Proposition> {
     private List<Proposition> propositions;
     private Set<AtomicProposition> atomics;
 
@@ -86,5 +83,70 @@ public class LogicContext {
         if (str.length() >= width) return str;
         int padding = (width - str.length()) / 2;
         return String.format("%" + (padding + str.length()) + "s", str);
+    }
+
+    @Override
+    public int size() {
+        return propositions.size();
+    }
+
+    @Override
+    public boolean isEmpty() {
+        return propositions.isEmpty();
+    }
+
+    @Override
+    public boolean contains(Object o) {
+        return propositions.contains(o);
+    }
+
+    @Override
+    public Iterator<Proposition> iterator() {
+        return propositions.iterator();
+    }
+
+    @Override
+    public Object[] toArray() {
+        return propositions.toArray();
+    }
+
+    @Override
+    public <T> T[] toArray(T[] a) {
+        return propositions.toArray(a);
+    }
+
+    @Override
+    public boolean add(Proposition proposition) {
+        return propositions.add(proposition);
+    }
+
+    @Override
+    public boolean remove(Object o) {
+        return propositions.remove(o);
+    }
+
+    @Override
+    public boolean containsAll(Collection<?> c) {
+        return propositions.containsAll(c);
+    }
+
+    @Override
+    public boolean addAll(Collection<? extends Proposition> c) {
+        return propositions.addAll(c);
+    }
+
+    @Override
+    public boolean removeAll(Collection<?> c) {
+        return propositions.removeAll(c);
+    }
+
+    @Override
+    public boolean retainAll(Collection<?> c) {
+        return propositions.retainAll(c);
+    }
+
+    @Override
+    public void clear() {
+        propositions.clear();
     }
 }
