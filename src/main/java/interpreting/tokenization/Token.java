@@ -70,6 +70,6 @@ public class Token {
     }
 
     public String toString() {
-        return String.format("%s%s", repTable.getRepresentation(type), type == TokenType.IDENTIFIER ? (": '" + data + '\'') : "");
+        return type == TokenType.IDENTIFIER ? data : repTable.getRepresentation(type);
     }
 }
