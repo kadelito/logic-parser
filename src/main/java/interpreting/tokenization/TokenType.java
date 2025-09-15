@@ -33,7 +33,6 @@ public enum TokenType {
             case OPEN_PAREN, CLOSE_PAREN -> 2;      // Parentheses
             case AND, OR, IMPLY, BICONDITIONAL -> 3;// Binary operators
             case NOT -> 4;                          // Unary operator
-            default -> -1;
         };
     }
 }

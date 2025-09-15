@@ -1,8 +1,7 @@
 package interpreting.parsing;
 
-import interpreting.common.InterpretingResult;
+import interpreting.common.PropositionConstructionResult;
 import interpreting.tokenization.Lexer;
-import logic.LogicContext;
 import propositions.AtomicProposition;
 import propositions.Proposition;
 

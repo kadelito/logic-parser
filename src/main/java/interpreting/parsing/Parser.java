@@ -1,6 +1,7 @@
 package interpreting.parsing;
 
 import interpreting.common.InterpretingResult;
+import interpreting.common.PropositionConstructionResult;
 import interpreting.tokenization.Lexer;
 import interpreting.tokenization.Token;
 import propositions.*;
@@ -10,8 +11,6 @@ import java.util.*;
 public class Parser {
 
     private Iterable<InterpretingResult<Token>> tokenStreamRPN;
-
-    private Set<AtomicProposition> atomics;
 
     public Parser(Lexer lexer) {
         tokenStreamRPN = new TokenPreParser(lexer);
@@ -57,7 +56,6 @@ public class Parser {
         if (propositionStack.size() != 1)
             return new PropositionConstructionResult(null, null, "More than 1 proposition found");
 
-        atomics = new HashSet<>(atomicMap.values());
-        return new PropositionConstructionResult(propositionStack.pop(), atomics, null);
+        return new PropositionConstructionResult(propositionStack.pop(), new HashSet<>(atomicMap.values()), null);
     }
 }

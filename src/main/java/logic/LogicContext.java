@@ -1,6 +1,5 @@
 package logic;
 
-import interpreting.common.RepresentationTable;
 import interpreting.parsing.PropositionProcessor;
 import propositions.AtomicProposition;
 import propositions.Proposition;
