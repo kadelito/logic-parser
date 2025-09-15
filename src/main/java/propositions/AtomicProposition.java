@@ -1,5 +1,8 @@
 package propositions;
 
+import interpreting.common.RepresentationTable;
+import interpreting.tokenization.TokenType;
+
 public class AtomicProposition extends Proposition {
 
     private boolean immut;
@@ -26,19 +29,14 @@ public class AtomicProposition extends Proposition {
     }
 
     public void setValue(boolean value) {
-        if (immut)
-            throw new RuntimeException("Cannot modify immutable atomic proposition.");
-        else
+        if (!immut)
             this.value = value;
-    }
-
-    // Intended as a.setValue(0) or a.setValue(1)
-    public void setValue(long value) {
-        setValue(value != 0);
     }
 
     @Override
     public String repr() {
+        if (this == Proposition.TRUE)       return RepresentationTable.getInstance().getRepresentation(TokenType.TRUE);
+        else if (this == Proposition.FALSE) return RepresentationTable.getInstance().getRepresentation(TokenType.FALSE);
         return '\'' + repr + '\'';
     }
 }
