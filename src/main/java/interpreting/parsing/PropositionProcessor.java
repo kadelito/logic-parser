@@ -2,6 +2,7 @@ package interpreting.parsing;
 
 import interpreting.common.InterpretingResult;
 import interpreting.tokenization.Lexer;
+import logic.LogicContext;
 import propositions.AtomicProposition;
 import propositions.Proposition;
 
@@ -10,14 +11,9 @@ import java.util.*;
 public class PropositionProcessor {
     private Lexer lexer;
     private Parser parser;
-    private InterpretingResult<Proposition> prevTreeOutput;
-    private List<Proposition> propositions;
-    private Set<AtomicProposition> atomics;
+    private PropositionConstructionResult prevTreeOutput;
 
     public PropositionProcessor(String input) {
-        atomics = new HashSet<>();
-        propositions = new ArrayList<>();
-
         lexer = new Lexer(input);
         parser = new Parser(lexer);
     }
@@ -28,10 +24,6 @@ public class PropositionProcessor {
 
     public void generateProposition() {
         prevTreeOutput = parser.buildPropositionTree();
-        if (prevTreeOutput.value() != null) {
-            propositions.add(prevTreeOutput.value());
-            atomics.addAll(parser.getAtomics());
-        }
     }
 
     public void generateProposition(String newStr) {
@@ -39,20 +31,16 @@ public class PropositionProcessor {
         generateProposition();
     }
 
+    public boolean generateSucceeded() {return prevTreeOutput.value() != null;}
+
     public Proposition getLastProposition() {
         return prevTreeOutput.value();
     }
 
+    public Set<AtomicProposition> getLastAtomicSet() {return prevTreeOutput.atomics();}
+
     public String getErrorMessage() {
         return prevTreeOutput.message();
-    }
-
-    public List<Proposition> getPropositions() {
-        return propositions;
-    }
-
-    public Set<AtomicProposition> getAtomics() {
-        return atomics;
     }
 
     public void setInput(String input) {

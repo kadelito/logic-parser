@@ -18,7 +18,7 @@ public class Parser {
     }
 
     // Generate propositional treeOutput from RPN queue of tokens
-    public InterpretingResult<Proposition> buildPropositionTree() {
+    public PropositionConstructionResult buildPropositionTree() {
         Map<String, AtomicProposition> atomicMap = new HashMap<>();
         Stack<Proposition> propositionStack = new Stack<>();
 
@@ -26,7 +26,7 @@ public class Parser {
             Token token = inToken.value();
 
             if (token == null)
-                return new InterpretingResult<>(null, "Token error: " + inToken.message());
+                return new PropositionConstructionResult(null, null, "Token error: " + inToken.message());
 
             if (token.isConstant())
                 propositionStack.add(switch(token.type) {
@@ -39,7 +39,7 @@ public class Parser {
             else if (token.isBinaryOperation()) {
                 // Last two propositions are reversed to retain original order
                 if (propositionStack.size() < 2)
-                    return new InterpretingResult<>(null, "Binary operator does not have two propositions");
+                    return new PropositionConstructionResult(null, null, "Binary operator does not have two propositions");
                 Proposition p2 = propositionStack.pop();
                 Proposition p1 = propositionStack.pop();
                 Proposition compound = new BinaryProposition(p1, p2, token.getBinaryOperator());
@@ -47,21 +47,17 @@ public class Parser {
             }
             else if (token.isUnaryOperation()) {
                 if (propositionStack.isEmpty())
-                    return new InterpretingResult<>(null, "Unary operator does not have a proposition");
+                    return new PropositionConstructionResult(null, null, "Unary operator does not have a proposition");
                 Proposition p = propositionStack.pop();
                 Proposition unary = new UnaryProposition(p, token.getUnaryOperator());
                 propositionStack.add(unary);
             }
-            else return new InterpretingResult<>(null, "Unexpected token found");
+            else return new PropositionConstructionResult(null, null, "Unexpected token found");
         }
         if (propositionStack.size() != 1)
-            return new InterpretingResult<>(null, "More than 1 proposition found");
+            return new PropositionConstructionResult(null, null, "More than 1 proposition found");
 
         atomics = new HashSet<>(atomicMap.values());
-        return new InterpretingResult<>(propositionStack.pop(), null);
-    }
-
-    public Set<AtomicProposition> getAtomics() {
-        return atomics;
+        return new PropositionConstructionResult(propositionStack.pop(), atomics, null);
     }
 }
