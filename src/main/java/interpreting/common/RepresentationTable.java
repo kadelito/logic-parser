@@ -101,7 +101,8 @@ public class RepresentationTable {
             if (row.tokenType() == type)
                 return row.representations()[reprType];
         }
-        return null;
+        throw new RuntimeException("Tried finding representation for token with type " + type);
+//        return null;
     }
 
     public String getRepresentation(BinaryOperator binOp) {
