@@ -1,9 +1,11 @@
 package interpreting.tokenization;
 
+import interpreting.common.RepresentationTable;
 import operators.BinaryOperator;
 import operators.UnaryOperator;
 
 public class Token {
+    private static RepresentationTable repTable = RepresentationTable.getInstance();
     public TokenType type;
     // field 'data' only for identifiers
     public String data;
@@ -39,6 +41,10 @@ public class Token {
         };
     }
 
+    public int precedence() {return type.precedence;}
+
+    public boolean leftAssociative() {return type.leftAssociative;}
+
     public boolean isProposition() {
         return isIdentifier() || isConstant();
     }
@@ -64,6 +70,6 @@ public class Token {
     }
 
     public String toString() {
-        return String.format("%s%s", type, type == TokenType.IDENTIFIER ? (": '" + data + '\'') : "");
+        return String.format("%s%s", repTable.getRepresentation(type), type == TokenType.IDENTIFIER ? (": '" + data + '\'') : "");
     }
 }

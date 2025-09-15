@@ -8,19 +8,22 @@ public enum TokenType {
     OR(2),
     IMPLY(1),
     BICONDITIONAL(0),
-    NOT(4),
+    NOT(4, false),
     TRUE,
-    FALSE,
-    EOF;
+    FALSE;
 
-    public final Integer precedence;
+    final Integer precedence;
+    final Boolean leftAssociative;
 
-    TokenType(Integer precedence) {
+    TokenType(Integer precedence, Boolean leftAssociative) {
         this.precedence = precedence;
+        this.leftAssociative = leftAssociative;
     }
 
+    TokenType(Integer precedence) {this(precedence, true);}
+
     TokenType() {
-        this(null);
+        this(null, null);
     }
 
     int getCategory() {

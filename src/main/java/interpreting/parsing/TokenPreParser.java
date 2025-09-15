@@ -5,11 +5,11 @@ import interpreting.tokenization.*;
 
 import java.util.*;
 
-public class TokenPreParser implements Iterable<InterpretingResult<Token>>{
+public class TokenPreParser implements Iterable<InterpretingResult<Token>> {
 
-    private Lexer tokenStream;
+    private Iterable<InterpretingResult<Token>> tokenStream;
 
-    public TokenPreParser(Lexer lexer) {
+    public TokenPreParser(Iterable<InterpretingResult<Token>> lexer) {
         tokenStream = lexer;
     }
 
@@ -85,6 +85,8 @@ public class TokenPreParser implements Iterable<InterpretingResult<Token>>{
             }
             else if (token.isParen()) {
                 if (token.type == TokenType.OPEN_PAREN) {
+                    if (!propositionExpected)
+                        return new InterpretingResult<>(null, "Unexpected open parenthesis");
                     operatorStack.push(token);
                 }
                 else { // curToken.type == TokenType.CLOSE_PAREN
@@ -93,22 +95,29 @@ public class TokenPreParser implements Iterable<InterpretingResult<Token>>{
                         outputQueue.add(operatorStack.pop());
                     }
                     if (operatorStack.isEmpty() || operatorStack.peek().type != TokenType.OPEN_PAREN)
-                        return new InterpretingResult<>(null, "Incorrect use of closing parentheses");
+                        return new InterpretingResult<>(null, "Incorrect use of closing parenthesis");
                     operatorStack.pop();
                     propositionExpected = false;
                     // TODO?: add support for function tokens
                 }
-                return next();
+                if (hasNext())
+                    return next();
+                else
+                    return new InterpretingResult<>(null, "Token expected after closing parenthesis");
             }
             else if (token.isBinaryOperation()) {
                 if (propositionExpected)
                     return new InterpretingResult<>(null, String.format("Binary operator '%s' found when proposition was expected", token));
-                while (!operatorStack.isEmpty() && operatorStack.peek().type != TokenType.OPEN_PAREN) {
-                    if (operatorStack.peek().numOperands() == 2)
+                while (!operatorStack.isEmpty()) {
+                    Token top = operatorStack.peek();
+                    if (!(top.type != TokenType.OPEN_PAREN && (top.precedence() > token.precedence() || (
+                            top.precedence() == token.precedence() && token.leftAssociative()))))
+                        break;
+
+                    if (top.numOperands() == 2)
                         activeOperands--;
                     outputQueue.add(operatorStack.pop());
                 }
-                // TODO!!: add support for differing precedence & right associativity!!
                 propositionExpected = true;
                 operatorStack.push(token);
                 return next();
