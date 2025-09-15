@@ -1,11 +1,8 @@
 package interpreting.common;
 
-import interpreting.parsing.PropositionProcessor;
 import interpreting.tokenization.TokenType;
 import operators.BinaryOperator;
 import operators.UnaryOperator;
-import propositions.AtomicProposition;
-import propositions.Proposition;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -70,56 +67,6 @@ public class RepresentationTable {
         }
     }
 
-    public void printTruthTable(PropositionProcessor interpreter) {
-
-        Proposition proposition = interpreter.getLastProposition();
-        List<AtomicProposition> atomics = new ArrayList<>(interpreter.getAtomics());
-
-        String treeRepr = proposition.repr();
-        int reprLen = treeRepr.length();
-        int lineLen = 2 + reprLen;
-        List<Integer> atomicLengths = new ArrayList<>(atomics.size());
-
-        // Print atomics and entire proposition
-        StringBuilder topRow = new StringBuilder(" ");
-        for (AtomicProposition a: atomics) {
-            String aRepr = a.repr();
-            topRow.append(aRepr).append(" | ");
-            atomicLengths.add(aRepr.length());
-            lineLen += aRepr.length() + 3;
-        }
-        topRow.append(treeRepr);
-        System.out.println(topRow);
-
-        // Divider
-        for (int i = 0; i < lineLen; i++) {
-            System.out.print("-");
-        }
-        System.out.println();
-
-        // Truth Table
-        long numCombinations = 1L << atomics.size();
-        // Check for overflow
-        if (numCombinations < atomics.size()) {
-            System.out.println("Too many atomic propositions! (" + atomics.size() + ")");
-            return;
-        }
-        for (long comb = numCombinations - 1; comb >= 0; comb--) {
-            for (int aIndex = 0; aIndex < atomics.size(); aIndex++)
-                atomics.get(atomics.size() - aIndex - 1).setValue((comb >> aIndex) % 2);
-            for (int i = 0; i < atomics.size(); i++) {
-                System.out.printf(" %" + atomicLengths.get(i) + "s |", atomics.get(i).evaluate() ? "T" : "F");
-            }
-            System.out.println(justifyCenter(proposition.evaluate() ? "T" : "F", reprLen + 1));
-        }
-    }
-
-    private String justifyCenter(String str, int width) {
-        if (str.length() >= width) return str;
-        int padding = (width - str.length()) / 2;
-        return String.format("%" + (padding + str.length()) + "s", str);
-    }
-
     public TokenType getTokenType(String input) {
         for (TableRow row: table) {
             for (String repr: row.representations()) {
@@ -141,6 +88,20 @@ public class RepresentationTable {
             }
         }
         return possible;
+    }
+
+    public String getRepresentation(TokenType type) {
+        switch (type) {
+            case OPEN_PAREN:
+                return "(";
+            case CLOSE_PAREN:
+                return ")";
+        }
+        for (TableRow row: table) {
+            if (row.tokenType() == type)
+                return row.representations()[reprType];
+        }
+        return null;
     }
 
     public String getRepresentation(BinaryOperator binOp) {
