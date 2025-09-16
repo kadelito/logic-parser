@@ -25,7 +25,7 @@ public class BinaryProposition extends Proposition {
 
     @Override
     public String reprRPN() {
-        return String.format("%s %s %s", Proposition.formatChild(p), Proposition.formatChild(q), operator);
+        return String.format("%s %s %s", p.reprRPN(), q.reprRPN(), operator);
     }
 
     public Proposition getLeftProposition() {

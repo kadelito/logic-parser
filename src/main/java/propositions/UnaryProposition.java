@@ -23,7 +23,7 @@ public class UnaryProposition extends Proposition {
 
     @Override
     public String reprRPN() {
-        return Proposition.formatChild(p) + " " + operator;
+        return p.reprRPN() + " " + operator;
     }
 
     public Proposition getProposition() {
