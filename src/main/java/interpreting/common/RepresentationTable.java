@@ -24,7 +24,7 @@ public class RepresentationTable {
      *        2 | Typeable
      *        3 | Words
      */
-    private int reprType = -1;
+    private int reprType = 0;
 
     private RepresentationTable() {
 
@@ -102,7 +102,6 @@ public class RepresentationTable {
                 return row.representations()[reprType];
         }
         throw new RuntimeException("Tried finding representation for token with type " + type);
-//        return null;
     }
 
     public String getRepresentation(BinaryOperator binOp) {
