@@ -30,4 +30,12 @@ public class BinaryProposition extends Proposition {
 
         return String.format("%s %s %s", pStr, operator, qStr);
     }
+
+    public Proposition getLeftProposition() {
+        return p;
+    }
+
+    public Proposition getRightProposition() {
+        return q;
+    }
 }

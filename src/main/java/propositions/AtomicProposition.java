@@ -37,6 +37,6 @@ public class AtomicProposition extends Proposition {
     public String repr() {
         if (this == Proposition.TRUE)       return RepresentationTable.getInstance().getRepresentation(TokenType.TRUE);
         else if (this == Proposition.FALSE) return RepresentationTable.getInstance().getRepresentation(TokenType.FALSE);
-        return '\'' + repr + '\'';
+        return repr;
     }
 }

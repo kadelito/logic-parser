@@ -2,7 +2,9 @@ package logic;
 
 import interpreting.parsing.PropositionProcessor;
 import propositions.AtomicProposition;
+import propositions.BinaryProposition;
 import propositions.Proposition;
+import propositions.UnaryProposition;
 
 import java.util.*;
 
@@ -26,37 +28,31 @@ public class LogicContext implements Collection<Proposition> {
         return propositions;
     }
 
-    public Set<AtomicProposition> getAtomics() {
-        return atomics;
-    }
-
-    public void printTruthTable() {
-        printTruthTable(propositions.size() - 1);
-    }
-
     public void printTruthTable(int index) {
 
         Proposition proposition = propositions.get(index);
-        List<AtomicProposition> atomicList = new ArrayList<>(atomics);
+        List<AtomicProposition> atomicList = new ArrayList<>(getAtomics(index));
 
         String treeRepr = proposition.repr();
         int reprLen = treeRepr.length();
-        int lineLen = 2 + reprLen;
+        int atomicsLen = 2;
         List<Integer> atomicLengths = new ArrayList<>(atomicList.size());
 
         // Print atomics and entire proposition
         StringBuilder topRow = new StringBuilder(" ");
-        for (AtomicProposition a: atomicList) {
-            String aRepr = a.repr();
+        for (int i = atomicList.size() - 1; i >= 0; i--) {
+            String aRepr = atomicList.get(i).repr();
             topRow.append(aRepr).append(" | ");
             atomicLengths.add(aRepr.length());
-            lineLen += aRepr.length() + 3;
+            atomicsLen += aRepr.length() + 3;
         }
+        System.out.print(justifyCenter("Atomics", atomicsLen - 3));
+        System.out.println("| " + justifyCenter("Proposition", reprLen + 1));
         topRow.append(treeRepr);
         System.out.println(topRow);
 
         // Divider
-        for (int i = 0; i < lineLen; i++) {
+        for (int i = 0; i < atomicsLen + reprLen; i++) {
             System.out.print("-");
         }
         System.out.println();
@@ -69,10 +65,10 @@ public class LogicContext implements Collection<Proposition> {
             return;
         }
         for (long comb = numCombinations - 1; comb >= 0; comb--) {
-            for (int i = 0; i < atomicList.size(); i++) {
+            for (int i = atomicList.size() - 1; i >= 0; i--) {
                 boolean val = (comb >> i) % 2 == 1;
-                atomicList.get(atomicList.size() - i - 1).setValue(val);
-                System.out.printf(" %" + atomicLengths.get(i) + "s |", val ? "T" : "F");
+                atomicList.get(i).setValue(val);
+                System.out.printf(justifyCenter(val ? "T" : "F", atomicLengths.get(i) + 2) + "|");
             }
             System.out.println(justifyCenter(proposition.evaluate() ? "T" : "F", reprLen + 1));
         }
@@ -82,7 +78,38 @@ public class LogicContext implements Collection<Proposition> {
     private String justifyCenter(String str, int width) {
         if (str.length() >= width) return str;
         int padding = (width - str.length()) / 2;
-        return String.format("%" + (padding + str.length()) + "s", str);
+        return String.format("%" + (padding + str.length()) + "s%" + (width - padding - str.length()) + "s", str, "");
+    }
+
+    // Returns the atomic propositions used in the proposition at given index
+    private Set<AtomicProposition> getAtomics(int index) {
+        Set<AtomicProposition> atomics = new HashSet<>();
+        Deque<Proposition> stack = new ArrayDeque<>();
+        Proposition current = propositions.get(index);
+        while (true) {
+            switch (current) {
+                case BinaryProposition b:
+                    stack.add(b.getRightProposition());
+                    current = b.getLeftProposition();
+                    break;
+
+                case UnaryProposition u:
+                    current = u.getProposition();
+                    break;
+
+                case AtomicProposition a:
+                    if (a != Proposition.TRUE && a != Proposition.FALSE)
+                        atomics.add(a);
+                    if (stack.isEmpty())
+                        return atomics;
+                    else
+                        current = stack.pop();
+                    break;
+
+                default:
+                    throw new IllegalStateException("Unexpected value: " + current);
+            }
+        }
     }
 
     @Override
