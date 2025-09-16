@@ -45,7 +45,7 @@ public class RepresentationTable {
                 TokenType.IMPLY, new String[]{"→", "\\rightarrow", "->", "IMPLIES", "⇒"},
                 BinaryOperator.IMPLY, null));
         table.add(new TableRow(
-                TokenType.BICONDITIONAL,new String[]{"↔", "\\leftrightarrow", "<->", "EQUALS", "⇔", "\\equiv"}, //TODO better word for biconditional
+                TokenType.BICONDITIONAL,new String[]{"↔", "\\leftrightarrow", "<->", "EQUALS", "⇔", "\\equiv"},
                 BinaryOperator.BICONDITIONAL, null));
         table.add(new TableRow(
                 TokenType.NOT, new String[]{"¬", "\\neg ", "-", "NOT", "!", "~"},
