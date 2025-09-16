@@ -7,18 +7,18 @@ import java.util.*;
 
 public class TokenPreParser implements Iterable<InterpretingResult<Token>> {
 
-    private Iterable<InterpretingResult<Token>> tokenStream;
+    private Iterable<InterpretingResult<Token>> infixTokenSequence;
 
-    public TokenPreParser(Iterable<InterpretingResult<Token>> lexer) {
-        tokenStream = lexer;
+    public TokenPreParser(Iterable<InterpretingResult<Token>> infixTokenSequence) {
+        this.infixTokenSequence = infixTokenSequence;
     }
 
     @Override
     public Iterator<InterpretingResult<Token>> iterator() {
-        return new TokenRPNIterator(tokenStream.iterator());
+        return new TokenRPNIterator(infixTokenSequence.iterator());
     }
 
-    private class TokenRPNIterator implements Iterator<InterpretingResult<Token>> {
+    private static class TokenRPNIterator implements Iterator<InterpretingResult<Token>> {
 
         private Iterator<InterpretingResult<Token>> tokenSource;
         private Queue<Token> outputQueue;

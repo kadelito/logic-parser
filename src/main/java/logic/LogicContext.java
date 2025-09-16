@@ -112,6 +112,10 @@ public class LogicContext implements Collection<Proposition> {
         }
     }
 
+    public Set<AtomicProposition> getAtomics() {
+        return atomics;
+    }
+
     @Override
     public int size() {
         return propositions.size();

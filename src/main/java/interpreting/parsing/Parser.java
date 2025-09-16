@@ -6,26 +6,32 @@ import common.propositions.Proposition;
 import common.propositions.UnaryProposition;
 import interpreting.common.InterpretingResult;
 import interpreting.common.PropositionConstructionResult;
-import interpreting.tokenization.Lexer;
 import interpreting.tokenization.Token;
-import propositions.*;
 
 import java.util.*;
 
 public class Parser {
 
-    private Iterable<InterpretingResult<Token>> tokenStreamRPN;
+    private Iterable<InterpretingResult<Token>> RPNTokenSequence;
+    private Map<String, AtomicProposition> atomicMap;
 
-    public Parser(Lexer lexer) {
-        tokenStreamRPN = new TokenPreParser(lexer);
+    public Parser(Iterable<InterpretingResult<Token>> infixTokenSequence) {
+        RPNTokenSequence = new TokenPreParser(infixTokenSequence);
+    }
+
+    public Parser(Iterable<InterpretingResult<Token>> infixTokenSequence, Set<AtomicProposition> atomicContext) {
+        this(infixTokenSequence);
+        for (AtomicProposition a: atomicContext)
+            atomicMap.put(a.repr(), a);
     }
 
     // Generate propositional treeOutput from RPN queue of tokens
     public PropositionConstructionResult buildPropositionTree() {
-        Map<String, AtomicProposition> atomicMap = new HashMap<>();
+        atomicMap = new HashMap<>();
+        Set<AtomicProposition> newAtomics = new HashSet<>();
         Stack<Proposition> propositionStack = new Stack<>();
 
-        for (InterpretingResult<Token> inToken: tokenStreamRPN) {
+        for (InterpretingResult<Token> inToken: RPNTokenSequence) {
             Token token = inToken.value();
 
             if (token == null)
@@ -37,8 +43,10 @@ public class Parser {
                     case FALSE -> Proposition.FALSE;
                     default -> throw new RuntimeException("Non-constant token was considered constant");
                 });
-            else if (token.isIdentifier())
+            else if (token.isIdentifier()) {
                 propositionStack.add(atomicMap.computeIfAbsent(token.data, str -> new AtomicProposition(token.data)));
+                newAtomics.add(atomicMap.get(token.data));
+            }
             else if (token.isBinaryOperation()) {
                 // Last two propositions are reversed to retain original order
                 if (propositionStack.size() < 2)
@@ -58,8 +66,9 @@ public class Parser {
             else return new PropositionConstructionResult(null, null, "Unexpected token found");
         }
         if (propositionStack.size() != 1)
-            return new PropositionConstructionResult(null, null, "More than 1 proposition found");
+            return new PropositionConstructionResult(null, null,
+                    propositionStack.isEmpty() ? "No propositions found" : "More than 1 proposition found");
 
-        return new PropositionConstructionResult(propositionStack.pop(), new HashSet<>(atomicMap.values()), null);
+        return new PropositionConstructionResult(propositionStack.pop(), newAtomics, null);
     }
 }

@@ -10,11 +10,18 @@ import java.util.*;
 public class PropositionProcessor {
     private Lexer lexer;
     private Parser parser;
+    private Set<AtomicProposition> atomicContext;
     private PropositionConstructionResult prevTreeOutput;
 
     public PropositionProcessor(String input) {
         lexer = new Lexer(input);
         parser = new Parser(lexer);
+        atomicContext = new HashSet<>();
+    }
+
+    public PropositionProcessor(String input, Set<AtomicProposition> atomicContext) {
+        lexer = new Lexer(input);
+        parser = new Parser(lexer, atomicContext);
     }
 
     public PropositionProcessor() {
@@ -23,6 +30,7 @@ public class PropositionProcessor {
 
     public void generateProposition() {
         prevTreeOutput = parser.buildPropositionTree();
+        atomicContext.addAll(prevTreeOutput.atomics());
     }
 
     public void generateProposition(String newStr) {
