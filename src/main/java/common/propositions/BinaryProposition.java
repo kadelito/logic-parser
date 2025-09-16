@@ -1,6 +1,6 @@
-package propositions;
+package common.propositions;
 
-import operators.BinaryOperator;
+import common.operators.BinaryOperator;
 
 public class BinaryProposition extends Proposition {
     private Proposition p;

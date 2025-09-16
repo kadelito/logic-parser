@@ -1,5 +1,9 @@
 package interpreting.parsing;
 
+import common.propositions.AtomicProposition;
+import common.propositions.BinaryProposition;
+import common.propositions.Proposition;
+import common.propositions.UnaryProposition;
 import interpreting.common.InterpretingResult;
 import interpreting.common.PropositionConstructionResult;
 import interpreting.tokenization.Lexer;

@@ -1,8 +1,8 @@
 package interpreting.common;
 
 import interpreting.tokenization.TokenType;
-import operators.BinaryOperator;
-import operators.UnaryOperator;
+import common.operators.BinaryOperator;
+import common.operators.UnaryOperator;
 
 import java.util.ArrayList;
 import java.util.HashSet;

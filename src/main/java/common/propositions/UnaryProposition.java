@@ -1,6 +1,6 @@
-package propositions;
+package common.propositions;
 
-import operators.UnaryOperator;
+import common.operators.UnaryOperator;
 
 public class UnaryProposition extends Proposition {
     private Proposition p;

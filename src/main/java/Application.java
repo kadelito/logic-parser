@@ -1,7 +1,8 @@
 import interpreting.parsing.PropositionProcessor;
 import interpreting.common.RepresentationTable;
 import logic.LogicContext;
-import propositions.Proposition;
+import common.propositions.AtomicProposition;
+import common.propositions.Proposition;
 
 import java.util.Scanner;
 

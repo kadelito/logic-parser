@@ -1,8 +1,8 @@
 package interpreting.tokenization;
 
 import interpreting.common.RepresentationTable;
-import operators.BinaryOperator;
-import operators.UnaryOperator;
+import common.operators.BinaryOperator;
+import common.operators.UnaryOperator;
 
 public class Token {
     private static RepresentationTable repTable = RepresentationTable.getInstance();

@@ -1,7 +1,7 @@
 package interpreting.common;
 
-import propositions.AtomicProposition;
-import propositions.Proposition;
+import common.propositions.AtomicProposition;
+import common.propositions.Proposition;
 
 import java.util.Set;
 

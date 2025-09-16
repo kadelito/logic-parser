@@ -1,4 +1,4 @@
-package propositions;
+package common.propositions;
 
 public abstract class Proposition {
     public static final AtomicProposition TRUE = new AtomicProposition("T", true, true);

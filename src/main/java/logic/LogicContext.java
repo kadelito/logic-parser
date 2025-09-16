@@ -1,10 +1,10 @@
 package logic;
 
 import interpreting.parsing.PropositionProcessor;
-import propositions.AtomicProposition;
-import propositions.BinaryProposition;
-import propositions.Proposition;
-import propositions.UnaryProposition;
+import common.propositions.AtomicProposition;
+import common.propositions.BinaryProposition;
+import common.propositions.Proposition;
+import common.propositions.UnaryProposition;
 
 import java.util.*;
 

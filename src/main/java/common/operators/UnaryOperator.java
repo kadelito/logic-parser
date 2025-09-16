@@ -1,7 +1,7 @@
-package operators;
+package common.operators;
 
 import interpreting.common.RepresentationTable;
-import propositions.Proposition;
+import common.propositions.Proposition;
 
 public enum UnaryOperator {
     NOT;

@@ -1,4 +1,4 @@
-package propositions;
+package common.propositions;
 
 import interpreting.common.RepresentationTable;
 import interpreting.tokenization.TokenType;

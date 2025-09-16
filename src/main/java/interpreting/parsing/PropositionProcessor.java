@@ -2,8 +2,8 @@ package interpreting.parsing;
 
 import interpreting.common.PropositionConstructionResult;
 import interpreting.tokenization.Lexer;
-import propositions.AtomicProposition;
-import propositions.Proposition;
+import common.propositions.AtomicProposition;
+import common.propositions.Proposition;
 
 import java.util.*;
 
