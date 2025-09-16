@@ -23,4 +23,8 @@ public class UnaryProposition extends Proposition {
             pStr = '(' + pStr + ')';
         return operator.toString() + pStr;
     }
+
+    public Proposition getProposition() {
+        return p;
+    }
 }
