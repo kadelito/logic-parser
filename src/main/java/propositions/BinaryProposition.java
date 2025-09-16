@@ -20,15 +20,12 @@ public class BinaryProposition extends Proposition {
 
     @Override
     public String repr() {
-        String pStr = p.repr();
-        if (!(p instanceof AtomicProposition))
-            pStr = '(' + pStr + ')';
+        return String.format("%s %s %s", Proposition.formatChild(p), operator, Proposition.formatChild(q));
+    }
 
-        String qStr = q.repr();
-        if (!(q instanceof AtomicProposition))
-            qStr = '(' + qStr + ')';
-
-        return String.format("%s %s %s", pStr, operator, qStr);
+    @Override
+    public String reprRPN() {
+        return String.format("%s %s %s", Proposition.formatChild(p), Proposition.formatChild(q), operator);
     }
 
     public Proposition getLeftProposition() {

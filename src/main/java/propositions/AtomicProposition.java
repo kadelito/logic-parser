@@ -39,4 +39,9 @@ public class AtomicProposition extends Proposition {
         else if (this == Proposition.FALSE) return RepresentationTable.getInstance().getRepresentation(TokenType.FALSE);
         return repr;
     }
+
+    @Override
+    public String reprRPN() {
+        return repr();
+    }
 }

@@ -18,10 +18,12 @@ public class UnaryProposition extends Proposition {
 
     @Override
     public String repr() {
-        String pStr = p.repr();
-        if (!(p instanceof AtomicProposition))
-            pStr = '(' + pStr + ')';
-        return operator.toString() + pStr;
+        return operator + Proposition.formatChild(p);
+    }
+
+    @Override
+    public String reprRPN() {
+        return Proposition.formatChild(p) + " " + operator;
     }
 
     public Proposition getProposition() {
