@@ -108,8 +108,9 @@ public class LogicContext implements Collection<PropositionEntry> {
     }
 
     @Override
-    public boolean add(PropositionEntry proposition) {
-        return propositions.add(proposition);
+    public boolean add(PropositionEntry entry) {
+        atomics.addAll(entry.atomics());
+        return propositions.add(entry);
     }
 
     @Override
