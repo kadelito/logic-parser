@@ -1,6 +1,5 @@
 package common.operators;
 
-import interpreting.common.RepresentationTable;
 import common.propositions.Proposition;
 
 public enum UnaryOperator {
@@ -13,9 +12,5 @@ public enum UnaryOperator {
             default:
                 throw new RuntimeException();
         }
-    }
-
-    public String toString() {
-        return RepresentationTable.getInstance().getRepresentation(this);
     }
 }

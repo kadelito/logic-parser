@@ -1,6 +1,5 @@
 package common.operators;
 
-import interpreting.common.RepresentationTable;
 import common.propositions.Proposition;
 
 public enum BinaryOperator {
@@ -17,9 +16,5 @@ public enum BinaryOperator {
             case IMPLY -> !p.evaluate() || q.evaluate();
             case BICONDITIONAL -> p.evaluate() == q.evaluate();
         };
-    }
-
-    public String toString() {
-        return RepresentationTable.getInstance().getRepresentation(this);
     }
 }

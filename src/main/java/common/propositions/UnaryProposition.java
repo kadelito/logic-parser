@@ -1,8 +1,11 @@
 package common.propositions;
 
 import common.operators.UnaryOperator;
+import interpreting.common.RepresentationTable;
 
 public class UnaryProposition extends Proposition {
+    private static RepresentationTable table = RepresentationTable.getInstance();
+
     private Proposition p;
     private UnaryOperator operator;
 
@@ -18,7 +21,7 @@ public class UnaryProposition extends Proposition {
 
     @Override
     public String repr() {
-        return operator + Proposition.formatChild(p);
+        return table.getRepresentation(operator) + Proposition.formatChild(p);
     }
 
     @Override

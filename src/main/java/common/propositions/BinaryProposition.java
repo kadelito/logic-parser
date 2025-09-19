@@ -1,8 +1,11 @@
 package common.propositions;
 
 import common.operators.BinaryOperator;
+import interpreting.common.RepresentationTable;
 
 public class BinaryProposition extends Proposition {
+    private static RepresentationTable table = RepresentationTable.getInstance();
+
     private Proposition p;
     private Proposition q;
     private BinaryOperator operator;
@@ -20,7 +23,7 @@ public class BinaryProposition extends Proposition {
 
     @Override
     public String repr() {
-        return String.format("%s %s %s", Proposition.formatChild(p), operator, Proposition.formatChild(q));
+        return String.format("%s %s %s", Proposition.formatChild(p), table.getRepresentation(operator), Proposition.formatChild(q));
     }
 
     @Override
