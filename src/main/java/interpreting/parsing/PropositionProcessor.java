@@ -60,4 +60,6 @@ public class PropositionProcessor {
     public void setContext(Set<AtomicProposition> atomicContext) {parser.setAtomicContext(atomicContext);}
 
     public void setContext(LogicContext context) {parser.setAtomicContext(context.getAtomics());}
+
+    public void clearContext() {parser.clearContext();}
 }
