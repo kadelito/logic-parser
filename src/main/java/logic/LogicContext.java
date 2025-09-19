@@ -1,15 +1,13 @@
 package logic;
 
-import interpreting.parsing.PropositionProcessor;
+import common.PropositionEntry;
 import common.propositions.AtomicProposition;
-import common.propositions.BinaryProposition;
 import common.propositions.Proposition;
-import common.propositions.UnaryProposition;
 
 import java.util.*;
 
-public class LogicContext implements Collection<Proposition> {
-    private List<Proposition> propositions;
+public class LogicContext implements Collection<PropositionEntry> {
+    private List<PropositionEntry> propositions;
     private Set<AtomicProposition> atomics;
 
     public LogicContext() {
@@ -17,21 +15,15 @@ public class LogicContext implements Collection<Proposition> {
         propositions = new ArrayList<>();
     }
 
-    public void updateSelf(PropositionProcessor processor) {
-        if (processor.generateSucceeded()) {
-            propositions.add(processor.getLastProposition());
-            atomics.addAll(processor.getLastAtomicSet());
-        }
-    }
-
-    public List<Proposition> getPropositions() {
+    public List<PropositionEntry> getPropositions() {
         return propositions;
     }
 
     public void printTruthTable(int index) {
 
-        Proposition proposition = propositions.get(index);
-        List<AtomicProposition> atomicList = new ArrayList<>(getAtomics(index));
+        PropositionEntry entry = propositions.get(index);
+        Proposition proposition = entry.value();
+        List<AtomicProposition> atomicList = new ArrayList<>(entry.atomics());
 
         String treeRepr = proposition.repr();
         int reprLen = treeRepr.length();
@@ -81,37 +73,6 @@ public class LogicContext implements Collection<Proposition> {
         return String.format("%" + (padding + str.length()) + "s%" + (width - padding - str.length()) + "s", str, "");
     }
 
-    // Returns the atomic propositions used in the proposition at given index
-    private Set<AtomicProposition> getAtomics(int index) {
-        Set<AtomicProposition> atomics = new HashSet<>();
-        Deque<Proposition> stack = new ArrayDeque<>();
-        Proposition current = propositions.get(index);
-        while (true) {
-            switch (current) {
-                case BinaryProposition b:
-                    stack.add(b.getRightProposition());
-                    current = b.getLeftProposition();
-                    break;
-
-                case UnaryProposition u:
-                    current = u.getProposition();
-                    break;
-
-                case AtomicProposition a:
-                    if (a != Proposition.TRUE && a != Proposition.FALSE)
-                        atomics.add(a);
-                    if (stack.isEmpty())
-                        return atomics;
-                    else
-                        current = stack.pop();
-                    break;
-
-                default:
-                    throw new IllegalStateException("Unexpected value: " + current);
-            }
-        }
-    }
-
     public Set<AtomicProposition> getAtomics() {
         return atomics;
     }
@@ -132,7 +93,7 @@ public class LogicContext implements Collection<Proposition> {
     }
 
     @Override
-    public Iterator<Proposition> iterator() {
+    public Iterator<PropositionEntry> iterator() {
         return propositions.iterator();
     }
 
@@ -147,7 +108,7 @@ public class LogicContext implements Collection<Proposition> {
     }
 
     @Override
-    public boolean add(Proposition proposition) {
+    public boolean add(PropositionEntry proposition) {
         return propositions.add(proposition);
     }
 
@@ -162,7 +123,7 @@ public class LogicContext implements Collection<Proposition> {
     }
 
     @Override
-    public boolean addAll(Collection<? extends Proposition> c) {
+    public boolean addAll(Collection<? extends PropositionEntry> c) {
         return propositions.addAll(c);
     }
 

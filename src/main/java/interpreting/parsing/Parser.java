@@ -1,9 +1,7 @@
 package interpreting.parsing;
 
-import common.propositions.AtomicProposition;
-import common.propositions.BinaryProposition;
-import common.propositions.Proposition;
-import common.propositions.UnaryProposition;
+import common.PropositionEntry;
+import common.propositions.*;
 import interpreting.common.InterpretingResult;
 import interpreting.common.PropositionConstructionResult;
 import interpreting.tokenization.Token;
@@ -17,6 +15,7 @@ public class Parser {
 
     public Parser(Iterable<InterpretingResult<Token>> infixTokenSequence) {
         RPNTokenSequence = new TokenPreParser(infixTokenSequence);
+        atomicMap = new HashMap<>();
     }
 
     public Parser(Iterable<InterpretingResult<Token>> infixTokenSequence, Set<AtomicProposition> atomicContext) {
@@ -25,9 +24,8 @@ public class Parser {
             atomicMap.put(a.repr(), a);
     }
 
-    // Generate propositional treeOutput from RPN queue of tokens
+    // Generate propositional treeOutput from RPN sequence of tokens
     public PropositionConstructionResult buildPropositionTree() {
-        atomicMap = new HashMap<>();
         Set<AtomicProposition> newAtomics = new HashSet<>();
         Stack<Proposition> propositionStack = new Stack<>();
 
@@ -35,7 +33,7 @@ public class Parser {
             Token token = inToken.value();
 
             if (token == null)
-                return new PropositionConstructionResult(null, null, "Token error: " + inToken.message());
+                return new PropositionConstructionResult(null, "Token error: " + inToken.message());
 
             if (token.isConstant())
                 propositionStack.add(switch(token.type) {
@@ -50,7 +48,7 @@ public class Parser {
             else if (token.isBinaryOperation()) {
                 // Last two propositions are reversed to retain original order
                 if (propositionStack.size() < 2)
-                    return new PropositionConstructionResult(null, null, "Binary operator does not have two propositions");
+                    return new PropositionConstructionResult(null,  "Binary operator does not have two propositions");
                 Proposition p2 = propositionStack.pop();
                 Proposition p1 = propositionStack.pop();
                 Proposition compound = new BinaryProposition(p1, p2, token.getBinaryOperator());
@@ -58,17 +56,29 @@ public class Parser {
             }
             else if (token.isUnaryOperation()) {
                 if (propositionStack.isEmpty())
-                    return new PropositionConstructionResult(null, null, "Unary operator does not have a proposition");
+                    return new PropositionConstructionResult(null,  "Unary operator does not have a proposition");
                 Proposition p = propositionStack.pop();
                 Proposition unary = new UnaryProposition(p, token.getUnaryOperator());
                 propositionStack.add(unary);
             }
-            else return new PropositionConstructionResult(null, null, "Unexpected token found");
+            else return new PropositionConstructionResult(null, "Unexpected token found");
         }
-        if (propositionStack.size() != 1)
-            return new PropositionConstructionResult(null, null,
-                    propositionStack.isEmpty() ? "No propositions found" : "More than 1 proposition found");
+        if (propositionStack.empty())
+            return new PropositionConstructionResult(null, "No propositions found");
+        if (propositionStack.size() > 1)
+            return new PropositionConstructionResult(null, "More than 1 proposition found");
 
-        return new PropositionConstructionResult(propositionStack.pop(), newAtomics, null);
+        return new PropositionConstructionResult(
+                new PropositionEntry(propositionStack.pop(), newAtomics), null);
+    }
+
+    public void setAtomicContext(Set<AtomicProposition> atomicContext) {
+        atomicMap.clear();
+        for (AtomicProposition a: atomicContext)
+            atomicMap.put(a.repr(), a);
+    }
+
+    public void clearContext() {
+        atomicMap.clear();
     }
 }

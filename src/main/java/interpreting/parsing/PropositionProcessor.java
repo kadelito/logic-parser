@@ -1,9 +1,11 @@
 package interpreting.parsing;
 
+import common.PropositionEntry;
 import interpreting.common.PropositionConstructionResult;
 import interpreting.tokenization.Lexer;
 import common.propositions.AtomicProposition;
 import common.propositions.Proposition;
+import logic.LogicContext;
 
 import java.util.*;
 
@@ -14,12 +16,13 @@ public class PropositionProcessor {
     private PropositionConstructionResult prevTreeOutput;
 
     public PropositionProcessor(String input) {
+        this.atomicContext = new HashSet<>();
         lexer = new Lexer(input);
         parser = new Parser(lexer);
-        atomicContext = new HashSet<>();
     }
 
     public PropositionProcessor(String input, Set<AtomicProposition> atomicContext) {
+        this.atomicContext = atomicContext;
         lexer = new Lexer(input);
         parser = new Parser(lexer, atomicContext);
     }
@@ -30,7 +33,8 @@ public class PropositionProcessor {
 
     public void generateProposition() {
         prevTreeOutput = parser.buildPropositionTree();
-        atomicContext.addAll(prevTreeOutput.atomics());
+        if (generateSucceeded())
+            atomicContext.addAll(prevTreeOutput.value().atomics());
     }
 
     public void generateProposition(String newStr) {
@@ -40,11 +44,11 @@ public class PropositionProcessor {
 
     public boolean generateSucceeded() {return prevTreeOutput.value() != null;}
 
-    public Proposition getLastProposition() {
+    public PropositionEntry getLastProposition() {
         return prevTreeOutput.value();
     }
 
-    public Set<AtomicProposition> getLastAtomicSet() {return prevTreeOutput.atomics();}
+    public Set<AtomicProposition> getLastAtomicSet() {return prevTreeOutput.value().atomics();}
 
     public String getErrorMessage() {
         return prevTreeOutput.message();
@@ -53,4 +57,8 @@ public class PropositionProcessor {
     public void setInput(String input) {
         lexer.setInput(input);
     }
+
+    public void setContext(Set<AtomicProposition> atomicContext) {parser.setAtomicContext(atomicContext);}
+
+    public void setContext(LogicContext context) {parser.setAtomicContext(context.getAtomics());}
 }
