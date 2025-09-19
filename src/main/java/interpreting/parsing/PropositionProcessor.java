@@ -4,7 +4,6 @@ import common.PropositionEntry;
 import interpreting.common.PropositionConstructionResult;
 import interpreting.tokenization.Lexer;
 import common.propositions.AtomicProposition;
-import common.propositions.Proposition;
 import logic.LogicContext;
 
 import java.util.*;
