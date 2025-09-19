@@ -12,6 +12,10 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+/**
+ * A singleton class determining how tokens, operators, and certain propositions are represented as Strings.
+ */
+// TODO: Replace list & linear searches with multiple maps
 public class RepresentationTable {
 
     private static RepresentationTable instance;
@@ -70,6 +74,15 @@ public class RepresentationTable {
         }
     }
 
+    /**
+     * Prints a truth table for a proposition.
+     * This entails, for each combination, printing out each atomic proposition's truth value
+     * and the corresponding truth value of the evaluated proposition.
+     * 
+     * @apiNote Because the number of rows is 2^<sup># of atomics</sup>,
+     * extra checks may be desired for large propositions.
+     * @param entry the top-level proposition
+     */
     public void printTruthTable(PropositionEntry entry) {
 
         Proposition proposition = entry.proposition();
@@ -123,6 +136,9 @@ public class RepresentationTable {
         return String.format("%" + (padding + str.length()) + "s%" + (width - padding - str.length()) + "s", str, "");
     }
 
+    /**
+     * @return the token type that corresponds to <code>input</code>, <code>null</code> if nothing matches.
+     */
     public TokenType getTokenType(String input) {
         for (TableRow row: table) {
             for (String repr: row.representations()) {
@@ -133,6 +149,9 @@ public class RepresentationTable {
         return null;
     }
 
+    /**
+     * @return a Set of all token types with a representation that starts with <code>input</code>
+     */
     public Set<TokenType> getPossibleTokenTypes(String input) {
         Set<TokenType> possible = new HashSet<>();
         for (TableRow row: table) {
@@ -146,6 +165,13 @@ public class RepresentationTable {
         return possible;
     }
 
+    /**
+     * @return the corresponding String representation of <code>type</code> according to the current 'display mode'.
+     * @see #displayAsDefault()
+     * @see #displayAsTypeable()
+     * @see #displayAsLaTeX()
+     * @see #displayAsWords()
+     */
     public String getRepresentation(TokenType type) {
         switch (type) {
             case OPEN_PAREN:
@@ -160,6 +186,13 @@ public class RepresentationTable {
         throw new RuntimeException("Tried finding representation for token with type " + type);
     }
 
+    /**
+     * @return the corresponding String representation of <code>binOp</code> according to the current 'display mode'.
+     * @see #displayAsDefault()
+     * @see #displayAsTypeable()
+     * @see #displayAsLaTeX()
+     * @see #displayAsWords()
+     */
     public String getRepresentation(BinaryOperator binOp) {
         for (TableRow row: table) {
             if (row.binaryOperator() == binOp)
@@ -168,6 +201,13 @@ public class RepresentationTable {
         return null;
     }
 
+    /**
+     * @return the corresponding String representation of <code>unOp</code> according to the current 'display mode'.
+     * @see #displayAsDefault()
+     * @see #displayAsTypeable()
+     * @see #displayAsLaTeX()
+     * @see #displayAsWords()
+     */
     public String getRepresentation(UnaryOperator unOp) {
         for (TableRow row: table) {
             if (row.unaryOperator() == unOp)
@@ -176,10 +216,16 @@ public class RepresentationTable {
         return null;
     }
 
+    /**
+     * @return whether <code>c</code> is allowed when interpreting.
+     */
     public boolean isAllowed(char c) {
         return Character.isWhitespace(c) || validIdentifierChar(c) || allowedCharacters.contains(c);
     }
 
+    /**
+     * @return whether <code>c</code> can be used in an identifier.
+     */
     public boolean validIdentifierChar(char c) {
         return c == '_' || Character.isLetterOrDigit(c);
     }
@@ -206,6 +252,9 @@ public class RepresentationTable {
      */
     public void displayAsWords() {reprType = 3;}
 
+    /**
+     * @return the singleton instance
+     */
     public static RepresentationTable getInstance() {
         if (instance == null)
             instance = new RepresentationTable();
