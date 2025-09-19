@@ -10,18 +10,21 @@ public abstract class Proposition {
     private static AtomicProposition FALSE = null;
 
     /**
-     * Returns the truth proposition of this proposition.
+     * Returns the truth value of this proposition.
      * <p>
-     * Implementations should call this method on child propositions (if any) and use the resulting proposition.
+     * Implementations should call this method on child propositions (if any).
      *
-     * @return the truth proposition of this proposition
+     * @return the truth value of this proposition
      */
     public abstract boolean evaluate();
 
     /**
      * Returns a string representation of this proposition.
      * <p>
-     * Implementations should include the proposition of repr when called on child propositions.
+     * Implementations should call this method on child propositions (if any).
+     * <p>
+     * This method is declared <code>protected</code> to force unique implementations.
+     * {@link #toString} should instead be called from non-subclasses.
      *
      * @return the complete representation
      */
@@ -31,19 +34,27 @@ public abstract class Proposition {
         return repr();
     }
 
+    /**
+     * @return the constant {@link AtomicProposition} instance TRUE
+     */
     public static AtomicProposition getTrue() {
         if (TRUE == null)
              TRUE = new AtomicProposition("T", true, true);
         return TRUE;
     }
 
+    /**
+     * @return the constant {@link AtomicProposition} instance FALSE
+     */
     public static AtomicProposition getFalse() {
         if (FALSE == null)
             FALSE = new AtomicProposition("F", false, true);
         return FALSE;
     }
 
-    // Helper method for proposition formatting
+    /**
+     * Helper method for proposition formatting
+     */
     static String formatChild(Proposition p) {
         String str = p.repr();
         if (!(p instanceof AtomicProposition))
