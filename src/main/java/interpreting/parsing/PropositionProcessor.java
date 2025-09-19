@@ -1,7 +1,7 @@
 package interpreting.parsing;
 
 import common.PropositionEntry;
-import interpreting.common.PropositionConstructionResult;
+import interpreting.common.InterpretingResult;
 import interpreting.tokenization.Lexer;
 import common.propositions.AtomicProposition;
 import logic.LogicContext;
@@ -12,7 +12,7 @@ public class PropositionProcessor {
     private Lexer lexer;
     private Parser parser;
     private Set<AtomicProposition> atomicContext;
-    private PropositionConstructionResult prevTreeOutput;
+    private InterpretingResult<PropositionEntry> prevTreeOutput;
 
     public PropositionProcessor(String input) {
         this.atomicContext = new HashSet<>();
