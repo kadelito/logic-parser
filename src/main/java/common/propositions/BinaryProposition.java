@@ -26,11 +26,6 @@ public class BinaryProposition extends Proposition {
         return String.format("%s %s %s", Proposition.formatChild(p), table.getRepresentation(operator), Proposition.formatChild(q));
     }
 
-    @Override
-    public String reprRPN() {
-        return String.format("%s %s %s", p.reprRPN(), q.reprRPN(), operator);
-    }
-
     public Proposition getLeftProposition() {
         return p;
     }

@@ -27,15 +27,6 @@ public abstract class Proposition {
      */
     protected abstract String repr();
 
-    /**
-     * Returns a string representation of the proposition in Reverse Polish Notation.
-     * <p>
-     * This means that operations (if any) must appear directly after the propositions on which they are applied.
-     *
-     * @return the complete representation in Reverse Polish Notation
-     */
-    public abstract String reprRPN();
-
     public String toString() {
         return repr();
     }

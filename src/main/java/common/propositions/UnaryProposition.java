@@ -24,11 +24,6 @@ public class UnaryProposition extends Proposition {
         return table.getRepresentation(operator) + Proposition.formatChild(p);
     }
 
-    @Override
-    public String reprRPN() {
-        return p.reprRPN() + " " + operator;
-    }
-
     public Proposition getProposition() {
         return p;
     }
