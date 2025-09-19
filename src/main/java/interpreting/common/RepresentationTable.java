@@ -75,7 +75,7 @@ public class RepresentationTable {
         Proposition proposition = entry.proposition();
         List<AtomicProposition> atomicList = new ArrayList<>(entry.atomics());
 
-        String treeRepr = proposition.repr();
+        String treeRepr = proposition.toString();
         int reprLen = treeRepr.length();
         int atomicsLen = 2;
         List<Integer> atomicLengths = new ArrayList<>(atomicList.size());
@@ -83,7 +83,7 @@ public class RepresentationTable {
         // Print atomics and entire proposition
         StringBuilder topRow = new StringBuilder(" ");
         for (int i = atomicList.size() - 1; i >= 0; i--) {
-            String aRepr = atomicList.get(i).repr();
+            String aRepr = atomicList.get(i).toString();
             topRow.append(aRepr).append(" | ");
             atomicLengths.add(aRepr.length());
             atomicsLen += aRepr.length() + 3;

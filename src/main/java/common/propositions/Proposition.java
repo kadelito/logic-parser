@@ -25,7 +25,7 @@ public abstract class Proposition {
      *
      * @return the complete representation
      */
-    public abstract String repr();
+    protected abstract String repr();
 
     /**
      * Returns a string representation of the proposition in Reverse Polish Notation.

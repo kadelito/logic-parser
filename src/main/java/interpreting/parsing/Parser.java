@@ -21,7 +21,7 @@ public class Parser {
     public Parser(Iterable<InterpretingResult<Token>> infixTokenSequence, Set<AtomicProposition> atomicContext) {
         this(infixTokenSequence);
         for (AtomicProposition a: atomicContext)
-            atomicMap.put(a.repr(), a);
+            atomicMap.put(a.toString(), a);
     }
 
     // Generate propositional treeOutput from RPN sequence of tokens
@@ -75,7 +75,7 @@ public class Parser {
     public void setAtomicContext(Set<AtomicProposition> atomicContext) {
         atomicMap.clear();
         for (AtomicProposition a: atomicContext)
-            atomicMap.put(a.repr(), a);
+            atomicMap.put(a.toString(), a);
     }
 
     public void clearContext() {
