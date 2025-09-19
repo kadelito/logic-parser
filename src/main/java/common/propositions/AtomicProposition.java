@@ -35,8 +35,8 @@ public class AtomicProposition extends Proposition {
 
     @Override
     public String repr() {
-        if (this == Proposition.TRUE)       return RepresentationTable.getInstance().getRepresentation(TokenType.TRUE);
-        else if (this == Proposition.FALSE) return RepresentationTable.getInstance().getRepresentation(TokenType.FALSE);
+        if (this == Proposition.getTrue()) return RepresentationTable.getInstance().getRepresentation(TokenType.TRUE);
+        else if (this == Proposition.getFalse()) return RepresentationTable.getInstance().getRepresentation(TokenType.FALSE);
         return repr;
     }
 

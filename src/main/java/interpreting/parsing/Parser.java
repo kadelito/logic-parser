@@ -37,8 +37,8 @@ public class Parser {
 
             if (token.isConstant())
                 propositionStack.add(switch(token.type) {
-                    case TRUE -> Proposition.TRUE;
-                    case FALSE -> Proposition.FALSE;
+                    case TRUE -> Proposition.getTrue();
+                    case FALSE -> Proposition.getFalse();
                     default -> throw new RuntimeException("Non-constant token was considered constant");
                 });
             else if (token.isIdentifier()) {

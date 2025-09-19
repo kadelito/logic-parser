@@ -6,8 +6,8 @@ package common.propositions;
  * @see #evaluate()
  */
 public abstract class Proposition {
-    public static final AtomicProposition TRUE = new AtomicProposition("T", true, true);
-    public static final AtomicProposition FALSE = new AtomicProposition("F", false, true);
+    private static AtomicProposition TRUE = null;
+    private static AtomicProposition FALSE = null;
 
     /**
      * Returns the truth proposition of this proposition.
@@ -36,6 +36,22 @@ public abstract class Proposition {
      */
     public abstract String reprRPN();
 
+    public String toString() {
+        return repr();
+    }
+
+    public static AtomicProposition getTrue() {
+        if (TRUE == null)
+             TRUE = new AtomicProposition("T", true, true);
+        return TRUE;
+    }
+
+    public static AtomicProposition getFalse() {
+        if (FALSE == null)
+            FALSE = new AtomicProposition("F", false, true);
+        return FALSE;
+    }
+
     // Helper method for proposition formatting
     static String formatChild(Proposition p) {
         String str = p.repr();
@@ -44,7 +60,4 @@ public abstract class Proposition {
         return str;
     }
 
-    public String toString() {
-        return repr();
-    }
 }
