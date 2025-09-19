@@ -2,8 +2,10 @@ package common.propositions;
 
 /**
  * An abstract class representing a proposition.
- *
- * @see #evaluate()
+ * <p>
+ * @apiNote Use this class when working with sub-expressions, recursion, or structure-level logic.
+ * <p>
+ * For top-level propositions needing context or metadata, see {@link common.PropositionEntry}
  */
 public abstract class Proposition {
     private static AtomicProposition TRUE = null;
