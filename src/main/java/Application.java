@@ -2,7 +2,7 @@ import common.PropositionEntry;
 import interpreting.parsing.PropositionProcessor;
 import interpreting.common.RepresentationTable;
 import logic.BruteForceReasoner;
-import logic.LogicContext;
+import logic.PropositionRegistry;
 import logic.Reasoner;
 
 import java.util.ArrayList;
@@ -13,14 +13,14 @@ public class Application {
     private Scanner input;
     private RepresentationTable table;
     private PropositionProcessor processor;
-    private LogicContext context;
+    private PropositionRegistry context;
     private Reasoner reasoner;
 
     public Application() {
         input = new Scanner(System.in);
         table = RepresentationTable.getInstance();
         processor = new PropositionProcessor();
-        context = new LogicContext();
+        context = new PropositionRegistry();
         reasoner = new BruteForceReasoner();
     }
 

@@ -5,11 +5,11 @@ import common.propositions.AtomicProposition;
 
 import java.util.*;
 
-public class LogicContext implements Collection<PropositionEntry> {
+public class PropositionRegistry implements Collection<PropositionEntry> {
     private List<PropositionEntry> propositions;
     private Set<AtomicProposition> atomics;
 
-    public LogicContext() {
+    public PropositionRegistry() {
         atomics = new HashSet<>();
         propositions = new ArrayList<>();
     }
