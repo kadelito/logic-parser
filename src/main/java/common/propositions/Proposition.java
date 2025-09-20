@@ -32,10 +32,6 @@ public abstract class Proposition {
      */
     protected abstract String repr();
 
-    public String toString() {
-        return repr();
-    }
-
     /**
      * @return the constant {@link AtomicProposition} instance TRUE
      */
@@ -62,6 +58,11 @@ public abstract class Proposition {
         if (!(p instanceof AtomicProposition))
             str = '(' + str + ')';
         return str;
+    };
+
+    @Override
+    public String toString() {
+        return repr();
     }
 
 }
