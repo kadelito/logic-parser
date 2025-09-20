@@ -8,7 +8,7 @@ import interpreting.tokenization.TokenType;
  */
 public class AtomicProposition extends Proposition {
 
-    private boolean immut;
+    private final boolean mutable;
     private boolean value;
     private String repr;
 
@@ -19,10 +19,10 @@ public class AtomicProposition extends Proposition {
      * <p>
      * This is because, in arguments & proofs, atomic propositions may be true or false at any time.
      */
-    AtomicProposition(String repr, boolean value, boolean immut) {
+    AtomicProposition(String repr, boolean value, boolean mutable) {
         this.repr = repr;
         this.value = value;
-        this.immut = immut;
+        this.mutable = mutable;
     }
 
     /**
@@ -32,7 +32,7 @@ public class AtomicProposition extends Proposition {
      * @param value the truth value
      */
     public AtomicProposition(String repr, boolean value) {
-        this(repr, value, false);
+        this(repr, value, true);
     }
 
     /**

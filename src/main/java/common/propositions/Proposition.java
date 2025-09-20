@@ -41,7 +41,7 @@ public abstract class Proposition {
      */
     public static AtomicProposition getTrue() {
         if (TRUE == null)
-             TRUE = new AtomicProposition("T", true, true);
+             TRUE = new AtomicProposition("T", true, false);
         return TRUE;
     }
 
@@ -50,7 +50,7 @@ public abstract class Proposition {
      */
     public static AtomicProposition getFalse() {
         if (FALSE == null)
-            FALSE = new AtomicProposition("F", false, true);
+            FALSE = new AtomicProposition("F", false, false);
         return FALSE;
     }
 
