@@ -7,8 +7,6 @@ package interpreting.common;
  * <p>
  * To be particular, exactly one of <code>value</code> or <code>message</code> should be <code>null</code>.
  * <p>
- * @apiNote
- * <p>
  * Additionally, if an error does occur, messages should "bubble up". Example usage:
  * <pre> {@code
  * InterpretingResult<T> result = ...

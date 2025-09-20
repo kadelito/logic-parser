@@ -78,8 +78,8 @@ public class RepresentationTable {
      * Prints a truth table for a proposition.
      * This entails, for each combination, printing out each atomic proposition's truth value
      * and the corresponding truth value of the evaluated proposition.
-     * 
-     * @apiNote Because the number of rows is 2^<sup># of atomics</sup>,
+     * <p>
+     * Because the number of rows is 2^<sup># of atomics</sup>,
      * extra checks may be desired for large propositions.
      * @param entry the top-level proposition
      */
