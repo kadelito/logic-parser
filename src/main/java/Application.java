@@ -117,7 +117,6 @@ public class Application {
         processor.generateProposition(input);
         if (processor.generateSucceeded()) {
             PropositionEntry entry = processor.getLastProposition();
-            context.add(entry);
             output.printf("Added to context: " + entry.proposition().toString());
         } else {
             output.println("Couldn't add proposition.");
@@ -142,7 +141,6 @@ public class Application {
     }
 
     private void showTruthTable() {
-        listPropositions();
         PropositionEntry entry = askEntry("");
         if (entry != null)
             table.printTruthTable(entry);

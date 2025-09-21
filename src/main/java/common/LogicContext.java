@@ -4,13 +4,43 @@ import common.propositions.AtomicProposition;
 
 import java.util.*;
 
+/**
+ * A container for {@link PropositionEntry PropositionEntries} that also manages the set of
+ * {@link common.propositions.AtomicProposition AtomicPropositions} used across them.
+ * <p>
+ * The context ensures that each atomic symbol is represented by a single shared
+ * {@code AtomicProposition} instance. This allows propositions added to the same
+ * context to remain consistent with one another.
+ * <p>
+ * Adding a proposition entry to this context will register any new atomics it contains,
+ * and removing an entry will also remove its atomics if they are not used elsewhere
+ * in the context. Other {@link Collection} methods follow this pattern as well.
+ * <p>
+ * <code>AtomicPropositions</code> are held in a {@link Map}
+ * to, using a corresponding {@link String}, allow access to existing ones or create new ones
+ * through {@link #getOrCreateAtomic(String)}.
+ *
+ * @see PropositionEntry
+ * @see common.propositions.AtomicProposition
+ */
 public class LogicContext implements Collection<PropositionEntry> {
     private final List<PropositionEntry> propositions;
     private final Map<String, AtomicProposition> atomicsMap;
 
+    /**
+     * Instantiates an empty LogicContext.
+     */
     public LogicContext() {
         atomicsMap = new HashMap<>();
         propositions = new ArrayList<>();
+    }
+
+    /**
+     * Instantiates a new LogicContext from an existing collection.
+     */
+    public LogicContext(Collection<? extends PropositionEntry> c) {
+        this();
+        addAll(c);
     }
 
     /**
@@ -19,12 +49,15 @@ public class LogicContext implements Collection<PropositionEntry> {
      *
      * @param repr the repr
      * @return an <code>AtomicProposition</code> with the name of repr
-     * @see AtomicProposition#AtomicProposition(String, boolean) Constructor for AtomicProposition
+     * @see AtomicProposition#AtomicProposition(String, boolean) AtomicProposition#AtomicProposition(String, boolean)Constructor for AtomicProposition
      */
     public AtomicProposition getOrCreateAtomic(String repr) {
         return atomicsMap.getOrDefault(repr, new AtomicProposition(repr));
     }
 
+    /**
+     * Returns the {@link PropositionEntry} at a specific index.
+     */
     public PropositionEntry getEntry(int index) {return propositions.get(index);}
 
     /**
@@ -90,7 +123,7 @@ public class LogicContext implements Collection<PropositionEntry> {
      * <p>
      * In the case that the element <code>e</code> (a {@link PropositionEntry}) was present,
      * if any {@link AtomicProposition AtomicPropositions} were present in exclusively element <code>e</code>,
-     * the associated <code>AtomicProposisions</code> are removed from context.
+     * the associated <code>AtomicPropositions</code> are removed from context.
      */
     @Override
     public boolean remove(Object o) {
@@ -133,7 +166,12 @@ public class LogicContext implements Collection<PropositionEntry> {
 
     @Override
     public boolean retainAll(Collection<?> c) {
-        return propositions.retainAll(c);
+        boolean modified = false;
+        for (PropositionEntry entry: propositions) {
+            if (!c.contains(entry))
+                modified |= remove(entry);
+        }
+        return modified;
     }
 
     @Override
