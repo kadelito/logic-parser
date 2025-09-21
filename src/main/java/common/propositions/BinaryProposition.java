@@ -4,7 +4,7 @@ import common.operators.BinaryOperator;
 import interpreting.common.RepresentationTable;
 
 /**
- * A class representing a proposition with some binary operator.
+ * A class representing a proposition with some binary operator and two child proposition operands.
  */
 public class BinaryProposition extends Proposition {
     private static RepresentationTable table = RepresentationTable.getInstance();
@@ -31,8 +31,17 @@ public class BinaryProposition extends Proposition {
         return operator.apply(p, q);
     }
 
+    /**
+     * Creates and returns a string representation of this instance.
+     * <p>
+     * This is done first by obtaining a representation of each child proposition,
+     * then by concatenating the two with the associated {@link BinaryOperator},
+     * whose representation is determined by {@link RepresentationTable}.
+     * in infix format (<code>p1 [operator] p2</code>)
+     * @return a complete string representation of this instance
+     */
     @Override
-    public String repr() {
+    protected String repr() {
         return String.format("%s %s %s", Proposition.formatChild(p), table.getRepresentation(operator), Proposition.formatChild(q));
     }
 

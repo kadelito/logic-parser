@@ -46,13 +46,19 @@ public class AtomicProposition extends Proposition {
      * incorrect behavior, such as duplicated variables in truth tables,
      * or two propositions incorrectly stated to be unequal.
      * <p>
-     * <b>Usage guideline:</b> Prefer creating atomics via {@link LogicContext#getAtomic(String)}
+     * <b>Usage guideline:</b> Prefer creating atomics via {@link LogicContext#getOrCreateAtomic(String)}
      * unless you explicitly want a self-contained, context-free proposition.
      */
     public AtomicProposition(String repr, boolean value) {
         this(repr, value, true);
     }
 
+    /**
+     * Instantiates a new Atomic proposition with a default truth value of <code>false</code>.
+     * <p>
+     * <b>Usage guideline:</b> Prefer creating atomics via {@link LogicContext#getOrCreateAtomic(String)}
+     * unless you explicitly want a self-contained, context-free proposition.
+     */
     public AtomicProposition(String repr) {this(repr, false, true);}
 
     /**
@@ -66,7 +72,8 @@ public class AtomicProposition extends Proposition {
     }
 
     /**
-     * @return the current truth value
+     * @return the current truth value, <code>true</code> or <code>false</code>.
+     * @see <a href="https://en.wikipedia.org/wiki/Principle_of_bivalence">Principle of bivalence</a>
      */
     @Override
     public boolean evaluate() {

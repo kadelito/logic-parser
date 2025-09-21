@@ -24,11 +24,14 @@ public abstract class Proposition {
      * Returns a string representation of this proposition.
      * <p>
      * Implementations should call this method on child propositions (if any).
+     * Implementations may also use a {@link interpreting.common.RepresentationTable RepresentationTable}
+     * to determine how certain elements are converted into strings.
      * <p>
      * This method is declared <code>protected</code> to force unique implementations.
      * {@link #toString} should instead be called from non-subclasses.
      *
      * @return the complete representation
+     * @see interpreting.common.RepresentationTable
      */
     protected abstract String repr();
 
@@ -58,7 +61,7 @@ public abstract class Proposition {
         if (!(p instanceof AtomicProposition))
             str = '(' + str + ')';
         return str;
-    };
+    }
 
     @Override
     public String toString() {
