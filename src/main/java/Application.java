@@ -5,19 +5,22 @@ import logic.BruteForceReasoner;
 import logic.PropositionRegistry;
 import logic.Reasoner;
 
+import java.io.InputStream;
+import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
 public class Application {
     private Scanner input;
+    private PrintStream output;
     private RepresentationTable table;
     private PropositionProcessor processor;
-    private PropositionRegistry context;
     private Reasoner reasoner;
 
-    public Application() {
-        input = new Scanner(System.in);
+    public Application(InputStream inputStream, PrintStream printStream) {
+        input = new Scanner(inputStream);
+        output = printStream;
         table = RepresentationTable.getInstance();
         processor = new PropositionProcessor();
         context = new PropositionRegistry();
@@ -27,8 +30,8 @@ public class Application {
     public void run() {
         RepresentationTable.getInstance().displayAsDefault();
 
-        System.out.println("Propositional Logic Playground"); // TODO name this thing better
-        System.out.println("Type the number of an option, or press Enter to quit.");
+        output.println("Propositional Logic Playground"); // TODO name this thing better
+        output.println("Type the number of an option, or press Enter to quit.");
 
         while (context != null) {
             printMenu();
@@ -36,7 +39,7 @@ public class Application {
 
             switch (choice) {
                 case "":
-                    System.out.println("Goodbye!");
+                    output.println("Goodbye!");
                     return;
                 case "0":
                     displaySettings();
@@ -57,7 +60,7 @@ public class Application {
                     validityTest();
                     break;
                 default:
-                    System.out.println("Unknown option: " + choice);
+                    output.println("Unknown option: " + choice);
                     break;
             }
             waitToContinue();
@@ -65,29 +68,29 @@ public class Application {
     }
 
     private void waitToContinue() {
-        System.out.print("\n(press enter to continue)");
+        output.print("\n(press enter to continue)");
         input.nextLine();
     }
 
     private void printMenu() {
-        System.out.println("\nOptions:");
-        System.out.println("  0: Change format settings");
-        System.out.println("  1: Show propositions in the current context");
-        System.out.println("  2: Add a proposition");
-        System.out.println("  3: Show a truth table for a proposition");
-        System.out.println("  4: Check for equality between propositions");
-        System.out.println("  5: Evaluate validity of an argument");
-        System.out.print(  "> ");
+        output.println("\nOptions:");
+        output.println("  0: Change format settings");
+        output.println("  1: Show propositions in the current context");
+        output.println("  2: Add a proposition");
+        output.println("  3: Show a truth table for a proposition");
+        output.println("  4: Check for equality between propositions");
+        output.println("  5: Evaluate validity of an argument");
+        output.print(  "> ");
     }
 
     private void displaySettings() {
         RepresentationTable table = RepresentationTable.getInstance();
-        System.out.println("\nOptions:");
-        System.out.println("  1: Default");
-        System.out.println("  2: LaTeX markup");
-        System.out.println("  3: Typable characters");
-        System.out.println("  4: Words");
-        System.out.print(  "> ");
+        output.println("\nOptions:");
+        output.println("  1: Default");
+        output.println("  2: LaTeX markup");
+        output.println("  3: Typable characters");
+        output.println("  4: Words");
+        output.print(  "> ");
 
         String choice = input.nextLine();
         switch (choice) {
@@ -100,12 +103,12 @@ public class Application {
             case "4": table.displayAsWords();
                 break;
             default:
-                System.out.println("No changes made.");
+                output.println("No changes made.");
         }
     }
 
     private void addProposition() {
-        System.out.print("Enter proposition: ");
+        output.print("Enter proposition: ");
         String input = this.input.nextLine().trim();
         if (input.isEmpty()) return;
 
@@ -113,10 +116,10 @@ public class Application {
         if (processor.generateSucceeded()) {
             PropositionEntry entry = processor.getLastProposition();
             context.add(entry);
-            System.out.printf("Added to context: " + entry.proposition().toString());
+            output.printf("Added to context: " + entry.proposition().toString());
         } else {
-            System.out.println("Couldn't add proposition.");
-            System.out.println(processor.getErrorMessage());
+            output.println("Couldn't add proposition.");
+            output.println(processor.getErrorMessage());
         }
     }
 
@@ -125,13 +128,13 @@ public class Application {
      */
     private boolean listPropositions() {
         if (context.isEmpty()) {
-            System.out.println("No propositions in context.");
+            output.println("No propositions in context.");
             return false;
         }
-        System.out.println("Propositions in context:");
+        output.println("Propositions in context:");
         int i = 0;
         for (PropositionEntry p : context) {
-            System.out.printf("  %d: %s\n", i++, p.proposition().toString());
+            output.printf("  %d: %s\n", i++, p.proposition().toString());
         }
         return true;
     }
@@ -145,7 +148,7 @@ public class Application {
 
     private void equalityTest() {
         if (context.isEmpty()) {
-            System.out.println("Not enough propositions to show equality.");
+            output.println("Not enough propositions to show equality.");
             return;
         }
 
@@ -157,17 +160,17 @@ public class Application {
         if (entry2 == null)
             return;
 
-        System.out.println("\nEvaluating equality between the two selections...");
+        output.println("\nEvaluating equality between the two selections...");
         Boolean result = reasoner.areEqual(entry1, entry2);
         if (result == null)
-            System.out.println("Something went wrong.");
+            output.println("Something went wrong.");
         else
-            System.out.println("The two propositions are " + (result ? "" : "not ") + "equivalent.");
+            output.println("The two propositions are " + (result ? "" : "not ") + "equivalent.");
     }
 
     private void validityTest() {
         if (context.isEmpty()) {
-            System.out.println("Not enough propositions to evaluate argument validity.");
+            output.println("Not enough propositions to evaluate argument validity.");
             return;
         }
 
@@ -183,22 +186,22 @@ public class Application {
                 premises.add(entry);
         }
         if (premises.isEmpty()) {
-            System.out.println("No premises entered.");
+            output.println("No premises entered.");
             return;
         }
-        System.out.println("\nArgument:");
+        output.println("\nArgument:");
         for (PropositionEntry entry: premises)
-            System.out.println(entry.proposition());
+            output.println(entry.proposition());
         for (int dash = 0; dash < 10; dash++)
-            System.out.print('-');
-        System.out.println("\n∴ " + conclusion.proposition());
+            output.print('-');
+        output.println("\n∴ " + conclusion.proposition());
 
-        System.out.println("Evaluating validity...");
+        output.println("Evaluating validity...");
         Boolean result = reasoner.isArgumentValid(conclusion, premises);
         if (result == null)
-            System.out.println("Something went wrong.");
+            output.println("Something went wrong.");
         else
-            System.out.println("The argument is " + (result ? "" : "not ") + "valid.");
+            output.println("The argument is " + (result ? "" : "not ") + "valid.");
     }
 
     /**
@@ -207,14 +210,14 @@ public class Application {
      */
     private PropositionEntry askEntry(String message) {
         if (!listPropositions()) return null;
-        System.out.println(message);
+        output.println(message);
         int index = askIndex();
         if (index < 0) {
-            System.out.println("Exiting early.");
+            output.println("Exiting early.");
             return null;
         }
         PropositionEntry entry = context.getEntry(index);
-        System.out.println("Selected: " + entry.proposition());
+        output.println("Selected: " + entry.proposition());
         return entry;
     }
 
@@ -229,7 +232,7 @@ public class Application {
     private int askIndex() {
         if (context.isEmpty()) return -1;
 
-        System.out.print("Enter index: ");
+        output.print("Enter index: ");
         String input = this.input.nextLine().trim();
 
         if (input.isEmpty()) {
@@ -240,11 +243,11 @@ public class Application {
         try {
             index = Integer.parseInt(input);
         } catch (NumberFormatException e) {
-            System.out.println("Not a valid number.");
+            output.println("Not a valid number.");
             return -1;
         }
         if (index < 0 || context.size() <= index) {
-            System.out.println("No proposition at that index.");
+            output.println("No proposition at that index.");
             return -1;
         }
         else return index;
