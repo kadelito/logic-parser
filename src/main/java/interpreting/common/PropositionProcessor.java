@@ -4,7 +4,7 @@ import common.PropositionEntry;
 import common.propositions.AtomicProposition;
 import interpreting.parsing.Parser;
 import interpreting.tokenization.Lexer;
-import logic.LogicContext;
+import common.LogicContext;
 
 /**
  *
@@ -59,11 +59,11 @@ public class PropositionProcessor {
         return prevTreeResult.message();
     }
 
-    public void clearContext() {parser.clearContext();}
-
     public void setInput(String input) {
         lexer.setInput(input);
     }
+
+    public void clearContext() {context.clear();}
 
     public void setContext(LogicContext context) {parser.setContext(context);}
 }

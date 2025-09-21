@@ -4,27 +4,59 @@ import common.PropositionEntry;
 import common.propositions.*;
 import interpreting.common.InterpretingResult;
 import interpreting.tokenization.Token;
+import common.LogicContext;
 
 import java.util.*;
 
+/**
+ * A class that transforms a sequence of tokens into a propositional tree.
+ * <p>
+ * Input is assumed to follow the expected syntactic format.
+ * If the input is invalid, this is handled as a normal part of control flow,
+ * as an {@link InterpretingResult} will be returned containing an error message
+ * rather than throwing an exception.
+ * <p>
+ * Internal errors (e.g. null tokens, logic bugs) are the only cases that may cause exceptions.
+ */
 public class Parser {
 
     private Iterable<InterpretingResult<Token>> RPNTokenSequence;
-    private Map<String, AtomicProposition> atomicMap;
+    private LogicContext context;
+    private LogicContext tempContext;
 
-    public Parser(Iterable<InterpretingResult<Token>> infixTokenSequence) {
-        RPNTokenSequence = new TokenPreParser(infixTokenSequence);
-        atomicMap = new HashMap<>();
+    /**
+     * Instantiates a new Parser using a pre-existing context.
+     *
+     * @param infixTokenSequence a sequence of tokens assumed to be in an infix format.
+     * @param context      the context to use (or create)
+     */
+    public Parser(Iterable<InterpretingResult<Token>> infixTokenSequence, LogicContext context) {
+        this.RPNTokenSequence = new TokenPreParser(infixTokenSequence);
+        this.context = context;
+        this.tempContext = new LogicContext();
     }
 
-    public Parser(Iterable<InterpretingResult<Token>> infixTokenSequence, Set<AtomicProposition> atomicContext) {
-        this(infixTokenSequence);
-        for (AtomicProposition a: atomicContext)
-            atomicMap.put(a.toString(), a);
-    }
-
-    // Generate propositional treeOutput from RPN sequence of tokens
+    /**
+     * Attempts to build a propositional tree. If it succeeds, updates the context
+     * <p>
+     * To prevent directly modifying context,
+     * a separate, temporary {@link LogicContext} is used for {@link AtomicProposition AtomicPropositions}
+     * not already in the context to ensure
+     * @return the result of the attempt
+     * @see AtomicProposition
+     */
     public InterpretingResult<PropositionEntry> buildPropositionTree() {
+        InterpretingResult<PropositionEntry> result = attemptGeneration();
+        tempContext.clear();
+        return result;
+    }
+
+    /**
+     * Actual code for buildPropositionTree.
+     * Extracted to allow separate "cleanup" operations at the end
+     * regardless on success or failure
+     */
+    private InterpretingResult<PropositionEntry> attemptGeneration() {
         Set<AtomicProposition> newAtomics = new HashSet<>();
         Stack<Proposition> propositionStack = new Stack<>();
 
@@ -38,11 +70,12 @@ public class Parser {
                 propositionStack.add(switch(token.type) {
                     case TRUE -> Proposition.getTrue();
                     case FALSE -> Proposition.getFalse();
-                    default -> throw new RuntimeException("Non-constant token was considered constant");
+                    default -> throw new IllegalStateException();
                 });
             else if (token.isIdentifier()) {
-                propositionStack.add(atomicMap.computeIfAbsent(token.data, str -> new AtomicProposition(token.data)));
-                newAtomics.add(atomicMap.get(token.data));
+                AtomicProposition atomic = getAtomic(token.data);
+                propositionStack.add(atomic);
+                newAtomics.add(atomic);
             }
             else if (token.isBinaryOperation()) {
                 // Last two propositions are reversed to retain original order
@@ -71,13 +104,19 @@ public class Parser {
                 new PropositionEntry(propositionStack.pop(), newAtomics), null);
     }
 
-    public void setAtomicContext(Set<AtomicProposition> atomicContext) {
-        atomicMap.clear();
-        for (AtomicProposition a: atomicContext)
-            atomicMap.put(a.toString(), a);
+    private AtomicProposition getAtomic(String repr) {
+        if (context.contains(repr))
+            return context.getAtomic(repr);
+        else
+            return tempContext.getAtomic(repr);
     }
 
-    public void clearContext() {
-        atomicMap.clear();
+    /**
+     * Sets the context.
+     *
+     * @param context the new context to be used
+     */
+    public void setContext(LogicContext context) {
+        this.context = context;
     }
 }

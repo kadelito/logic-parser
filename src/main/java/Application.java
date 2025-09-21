@@ -1,8 +1,8 @@
 import common.PropositionEntry;
-import interpreting.parsing.PropositionProcessor;
+import interpreting.common.PropositionProcessor;
 import interpreting.common.RepresentationTable;
 import logic.BruteForceReasoner;
-import logic.PropositionRegistry;
+import common.LogicContext;
 import logic.Reasoner;
 
 import java.io.InputStream;
@@ -15,6 +15,8 @@ public class Application {
     private Scanner input;
     private PrintStream output;
     private RepresentationTable table;
+
+    private LogicContext context;
     private PropositionProcessor processor;
     private Reasoner reasoner;
 
@@ -22,8 +24,8 @@ public class Application {
         input = new Scanner(inputStream);
         output = printStream;
         table = RepresentationTable.getInstance();
-        processor = new PropositionProcessor();
-        context = new PropositionRegistry();
+        context = new LogicContext();
+        processor = new PropositionProcessor(context);
         reasoner = new BruteForceReasoner();
     }
 
