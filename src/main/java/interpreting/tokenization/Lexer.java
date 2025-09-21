@@ -5,33 +5,63 @@ import interpreting.common.RepresentationTable;
 
 import java.util.*;
 
+/**
+ * A class that transforms a {@link String} into a sequence of {@link Token Tokens}.
+ * <p>
+ * Longer token representations are preferred over others.
+ * For example, if the input is <code>"->"</code>,
+ * it would be processed into a singular <code>ARROW</code> token,
+ * rather than a <code>HYPHEN</code> token and a <code>GREATER_THAN</code> token.
+ * <p>
+ * Input is assumed to follow the expected syntactic format.
+ * If the input is invalid, this is handled as a normal part of control flow,
+ * as an {@link InterpretingResult} will be returned containing an error message
+ * rather than throwing an exception.
+ * <p>
+ * Internal errors (e.g. null tokens, logic bugs) are the only cases that may cause exceptions.
+ */
 public class Lexer implements Iterable<InterpretingResult<Token>> {
 
     private static RepresentationTable repTable = RepresentationTable.getInstance();
     private String input;
 
+    /**
+     * Instantiates a new Lexer with a given {@link String} to be transformed into a sequence of {@link Token Tokens}.
+     *
+     * @param input the input
+     */
     public Lexer(String input) {
         this.input = input;
     }
 
     @Override
     public Iterator<InterpretingResult<Token>> iterator() {
-        return new LexerIterator();
+        return new LexerIterator(input);
     }
 
+    /**
+     * Sets input. If the input {@link String} is changed during token generation,
+     * any existing {@link Iterator Iterators} will not be affected.
+     *
+     * @param input the input
+     */
     public void setInput(String input) {
         this.input = input;
     }
 
     private class LexerIterator implements Iterator<InterpretingResult<Token>> {
-        
-        private int i;
 
+        private String input;
+        private int i;
         private boolean errorEncountered;
 
-        LexerIterator() {
-            i = -1; // Offset initial increment
-            errorEncountered = false;
+        /**
+         * Instantiates a new Lexer iterator.
+         */
+        LexerIterator(String input) {
+            this.input = input;
+            this.i = -1; // Offset initial increment
+            this.errorEncountered = false;
         }
     
         @Override

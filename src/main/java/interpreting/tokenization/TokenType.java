@@ -1,38 +1,30 @@
 package interpreting.tokenization;
 
 public enum TokenType {
-    OPEN_PAREN,
-    CLOSE_PAREN,
-    IDENTIFIER,
-    AND(3),
-    OR(2),
-    IMPLY(1),
-    BICONDITIONAL(0),
-    NOT(4, false),
-    TRUE,
-    FALSE;
+    IDENTIFIER(0),
+    TRUE(1),
+    FALSE(1),
+    OPEN_PAREN(2),
+    CLOSE_PAREN(2),
+    AND(3, 3, true),
+    OR(3, 2, true),
+    IMPLY(3, 1, true),
+    BICONDITIONAL(3, 0, true),
+    NOT(4, 4, null);
 
+    final int category;
     final Integer precedence;
     final Boolean leftAssociative;
 
-    TokenType(Integer precedence, Boolean leftAssociative) {
+    TokenType(int category, Integer precedence, Boolean leftAssociative) {
+        this.category = category;
         this.precedence = precedence;
         this.leftAssociative = leftAssociative;
     }
 
-    TokenType(Integer precedence) {this(precedence, true);}
-
-    TokenType() {
-        this(null, null);
-    }
+    TokenType(int category) {this(category, null, null);}
 
     int getCategory() {
-        return switch (this) {
-            case IDENTIFIER -> 0;
-            case TRUE, FALSE -> 1;                  // Constants
-            case OPEN_PAREN, CLOSE_PAREN -> 2;      // Parentheses
-            case AND, OR, IMPLY, BICONDITIONAL -> 3;// Binary operators
-            case NOT -> 4;                          // Unary operator
-        };
+        return category;
     }
 }

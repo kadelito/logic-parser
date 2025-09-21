@@ -5,10 +5,29 @@ import interpreting.tokenization.*;
 
 import java.util.*;
 
+/**
+ * A class that "intercepts" a sequence of {@link Token Tokens},
+ * converting a sequence with infixed operators to one in Reverse Polish Notation.
+ * <p>
+ * This class is used in {@link Parser} to facilitate building {@link common.propositions.Proposition Propositions}.
+ * <p>
+ * Input is assumed to follow the expected syntactic format.
+ * If the input is invalid, this is handled as a normal part of control flow,
+ * as an {@link InterpretingResult} will be returned containing an error message
+ * rather than throwing an exception.
+ * <p>
+ * Internal errors (e.g. null tokens, logic bugs) are the only cases that may cause exceptions.
+ * @see Parser
+ */
 public class TokenPreParser implements Iterable<InterpretingResult<Token>> {
 
     private Iterable<InterpretingResult<Token>> infixTokenSequence;
 
+    /**
+     * Instantiates a new Token pre parser.
+     *
+     * @param infixTokenSequence the infix token sequence to be used
+     */
     public TokenPreParser(Iterable<InterpretingResult<Token>> infixTokenSequence) {
         this.infixTokenSequence = infixTokenSequence;
     }
@@ -29,6 +48,11 @@ public class TokenPreParser implements Iterable<InterpretingResult<Token>> {
 
         private boolean errorEncountered;
 
+        /**
+         * Instantiates a new Token rpn iterator.
+         *
+         * @param tokens the tokens
+         */
         public TokenRPNIterator(Iterator<InterpretingResult<Token>> tokens) {
             tokenSource = tokens;
             outputQueue = new LinkedList<>();
@@ -62,7 +86,7 @@ public class TokenPreParser implements Iterable<InterpretingResult<Token>> {
             if (!tokenSource.hasNext()) {
                 if (operatorStack.isEmpty())
                     throw new IllegalStateException("Method 'next()' called when no tokens are available");
-                if (operatorStack.peek().type == TokenType.OPEN_PAREN)
+                if (operatorStack.peek().getType() == TokenType.OPEN_PAREN)
                     return new InterpretingResult<>(null, "Open parenthesis was not closed");
                 else
                     return new InterpretingResult<>(operatorStack.pop(), null);
@@ -84,21 +108,20 @@ public class TokenPreParser implements Iterable<InterpretingResult<Token>> {
                 return new InterpretingResult<>(token, null);
             }
             else if (token.isParen()) {
-                if (token.type == TokenType.OPEN_PAREN) {
+                if (token.getType() == TokenType.OPEN_PAREN) {
                     if (!propositionExpected)
                         return new InterpretingResult<>(null, "Unexpected open parenthesis");
                     operatorStack.push(token);
                 }
                 else { // curToken.type == TokenType.CLOSE_PAREN
-                    while (!operatorStack.isEmpty() && operatorStack.peek().type != TokenType.OPEN_PAREN) {
+                    while (!operatorStack.isEmpty() && operatorStack.peek().getType() != TokenType.OPEN_PAREN) {
                         activeOperands--;
                         outputQueue.add(operatorStack.pop());
                     }
-                    if (operatorStack.isEmpty() || operatorStack.peek().type != TokenType.OPEN_PAREN)
+                    if (operatorStack.isEmpty() || operatorStack.peek().getType() != TokenType.OPEN_PAREN)
                         return new InterpretingResult<>(null, "Incorrect use of closing parenthesis");
                     operatorStack.pop();
                     propositionExpected = false;
-                    // TODO?: add support for function tokens
                 }
                 if (hasNext())
                     return next();
@@ -110,11 +133,11 @@ public class TokenPreParser implements Iterable<InterpretingResult<Token>> {
                     return new InterpretingResult<>(null, String.format("Binary operator '%s' found when proposition was expected", token));
                 while (!operatorStack.isEmpty()) {
                     Token top = operatorStack.peek();
-                    if (!(top.type != TokenType.OPEN_PAREN && (top.precedence() > token.precedence() || (
+                    if (!(top.getType() != TokenType.OPEN_PAREN && (top.precedence() > token.precedence() || (
                             top.precedence() == token.precedence() && token.leftAssociative()))))
                         break;
 
-                    if (top.numOperands() == 2)
+                    if (top.isBinaryOperation())
                         activeOperands--;
                     outputQueue.add(operatorStack.pop());
                 }
