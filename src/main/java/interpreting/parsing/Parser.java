@@ -106,9 +106,9 @@ public class Parser {
 
     private AtomicProposition getAtomic(String repr) {
         if (context.contains(repr))
-            return context.getAtomic(repr);
+            return context.getOrCreateAtomic(repr);
         else
-            return tempContext.getAtomic(repr);
+            return tempContext.getOrCreateAtomic(repr);
     }
 
     /**

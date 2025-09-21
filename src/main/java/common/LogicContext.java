@@ -21,8 +21,8 @@ public class LogicContext implements Collection<PropositionEntry> {
      * @return an <code>AtomicProposition</code> with the name of repr
      * @see AtomicProposition#AtomicProposition(String, boolean) Constructor for AtomicProposition
      */
-    public AtomicProposition getAtomic(String repr) {
-        return atomicsMap.getOrDefault(repr, new AtomicProposition(repr, false));
+    public AtomicProposition getOrCreateAtomic(String repr) {
+        return atomicsMap.getOrDefault(repr, new AtomicProposition(repr));
     }
 
     public PropositionEntry getEntry(int index) {return propositions.get(index);}
